@@ -1,6 +1,4 @@
-
-   function run_shape_exp(timeline,taskCounter){
-       
+function run_shape_exp(timeline,taskCounter){
        
         var currTrial = 0;                  // note that trials are 0-35 rather than 1-36
         var currStim = ['','',''];          // the set of 3 images shown on each trial
@@ -9,7 +7,7 @@
         var corrAns;                        // correct answer (position of the image: 0,1,2)
         var numCorrect = 0;                 // keeps track of correct responses
         
-        var buttonArray_shape = ['class="image"/>','class="image"/>','class="image"/>'];
+        var buttonArray = ['class="image"/>','class="image"/>','class="image"/>'];
                                             // formatting for buttons in feedback screens
         
         var tmpindx;                        // temporary variable for shuffling purposes
@@ -18,7 +16,7 @@
         
         var skip = false;                   // for testing purposes
         
-        var imgExamples_shape = [
+        var imgExamples = [
             [
                 'ShapeStims_shapes/dulenan.png',
                 'ShapeStims_shapes/bevedis.png',
@@ -38,7 +36,7 @@
                 'next.png'
             ]
         ]
-        var audioExamples_shape = [
+        var audioExamples = [
             [
                 'ShapeStims/dulenan.wav',
                 'ShapeStims/bevedis.wav',
@@ -73,7 +71,7 @@
         var distract1 = jsPsych.randomization.repeat(setB,1).concat(jsPsych.randomization.repeat(setC,1)).concat(jsPsych.randomization.repeat(setA,1)); // part 1 distractors for stims A, B, C respectively    
         var distract2 = jsPsych.randomization.repeat(setC,1).concat(jsPsych.randomization.repeat(setA,1)).concat(jsPsych.randomization.repeat(setB,1)); // part 2 distractors for stims A, B, C respectively   
         
-        var audio_shape = [
+        var audio = [
             'ShapeStims/bebinege.wav',
             'ShapeStims/berolele.wav',
             'ShapeStims/bonobor.wav',
@@ -112,7 +110,7 @@
             'ShapeStims/gedurog.wav'
         ];
         
-        var img_shape = [
+        var img = [
             'ShapeStims_shapes/bebinege.png',
             'ShapeStims_shapes/berolele.png',
             'ShapeStims_shapes/bonobor.png',
@@ -154,7 +152,7 @@
         //////////////////////////////////////////////////////////////////////////////////////
         
         // Start Screen (instructions)
-        var start_screen_shape = {
+        var start_screen = {
             type: 'html-button-response',
             stimulus: '<div class="instruc"><p><b>Welcome to the SHAPE TASK!</b></p><p>You will listen to 36 nonsense words. For each word, you will choose the shape that best matches the pitch contour of the word. So, you should only pay attention to the changes in PITCH in each word, and choose the shape that best represents these pitch changes.</p><p>Please put on your headphones and click <b>NEXT</b> to listen to some examples of words for each shape.</p></div>',
             choices: ['next.png'],
@@ -171,7 +169,7 @@
             choices: '',
             on_start: function (example){
                 
-                currExamples = imgExamples_shape[whichExample-1];
+                currExamples = imgExamples[whichExample-1];
                 example.choices = currExamples;
                 
                 example.prompt = ('<div class="trialtext"><b>EXAMPLES: Set ').concat(whichExample).concat(' of 3</b><br>Click on each shape to listen to the word that corresponds to it.<br>When you are ready to move on to the next set of examples, click <b>NEXT</b>.</div>');
@@ -202,7 +200,7 @@
                 else{
                     example_audio.trial_duration = 1200;
                     
-                    example_audio.stimulus = audioExamples_shape[whichExample-1][userAns];
+                    example_audio.stimulus = audioExamples[whichExample-1][userAns];
                 
                     example_audio.prompt = ('<div class="trialtext"><b>EXAMPLES: Set ').concat(whichExample).concat(' of 3</b><br>Click on each shape to listen to the word that corresponds to it.<br>When you are ready to move on to the next set of examples, click <b>NEXT</b>.</div>');
 
@@ -218,7 +216,7 @@
         }
         
         // sets up the looping of the examples
-        var example_loop_shape = {
+        var example_loop = {
             timeline: [example_display, example_audio],
             loop_function: function() {
                 return whichExample<4; // as long as this returns TRUE, keep repeating
@@ -227,7 +225,7 @@
         
         
         // Final screen before beginning the experiment; reminds instructions
-        var example_wrap_shape = {
+        var example_wrap = {
             type: 'html-button-response',
             stimulus: '<div class="instruc"><p><b>READY?</b></p><p>To recap, you will listen to 36 nonsense words.</p><p>On each trial, you will hear 1 word and see 3 shapes.</p><p>Your job is to choose the shape that best matches the pitch contour of the word.</p><p>You will indicate your choice by clicking the shape.</p><p>You will receive feedback on whether your answer is correct.</p><p>Please put your headphones on now before beginning and try your best!</p><p>Click <b>NEXT</b> to begin.</p></div>',
             choices: ['next.png'],
@@ -246,11 +244,11 @@
             on_start: function (play_word){
                 // setup which word gets played, and the set of images
                 if (repeat==false){ // only set new audioFile and stim set if this is a brand new trial
-                    audioFile = audio_shape[idx[currTrial]];
+                    audioFile = audio[idx[currTrial]];
                     tmpStim = [
-                        img_shape[idx[currTrial]],
-                        img_shape[distract1[idx[currTrial]]],
-                        img_shape[distract2[idx[currTrial]]]
+                        img[idx[currTrial]],
+                        img[distract1[idx[currTrial]]],
+                        img[distract2[idx[currTrial]]]
                     ];             
                 
                     // shuffle the order of the current set of 3 images
@@ -331,12 +329,12 @@
                     jsPsych.endCurrentTimeline();
                 
                 // button formatting to display red/green border in feedback
-                buttonArray_shape[userAns] = 'class="feedbackwrong"/>';
-                buttonArray_shape[corrAns] = 'class="feedbackcorrect"/>';
+                buttonArray[userAns] = 'class="feedbackwrong"/>';
+                buttonArray[corrAns] = 'class="feedbackcorrect"/>';
                 
                 userResp.choices = currStim;
                     
-                userResp.button_html = [('<img src="%choice%" style = "position:fixed; top: 1vh; right: 10vw;"' ).concat(buttonArray_shape[0]),('<img src="%choice%" style = "position:fixed; top: 34vh; right: 10vw;"').concat(buttonArray_shape[1]),('<img src="%choice%" style = "position:fixed; top: 67vh; right: 10vw"').concat(buttonArray_shape[2])];
+                userResp.button_html = [('<img src="%choice%" style = "position:fixed; top: 1vh; right: 10vw;"' ).concat(buttonArray[0]),('<img src="%choice%" style = "position:fixed; top: 34vh; right: 10vw;"').concat(buttonArray[1]),('<img src="%choice%" style = "position:fixed; top: 67vh; right: 10vw"').concat(buttonArray[2])];
                 
                 if (corrAns==userAns){
                     userResp.prompt = ("<div class='trialtext'><b>Correct!</b><br>Click any image to continue.</div>");
@@ -346,7 +344,7 @@
                     userResp.prompt = ("<div class='trialtext'><b>Incorrect!</b><br>Click any image to continue.</div>");
             },
              on_finish: function(data){
-                 buttonArray_shape = ['class="image"/>','class="image"/>','class="image"/>']; 
+                 buttonArray = ['class="image"/>','class="image"/>','class="image"/>']; 
                  
                  // save data
                  trialData = trialData.concat({
@@ -368,27 +366,28 @@
         }        
         
          // Combining the 3 parts of a trial
-        var trial_shape = {
+        var trial = {
             timeline: [trial_repeat,feedback],
             repetitions: 36
         };
 
         
         // Final screen at the end
-        var end_screen_shape = {
+        var end_screen = {
             type: 'html-button-response',
             stimulus: '',
-            choices: ['next'],
+            choices: ['next.png'],
+            button_html: '<img src="%choice%" class="nextbutton"/>',
             on_start: function(end_screen) {
-                let p_corr = total_correct / cur_trial;
+                let p_corr = numCorrect / currTrial;
                 
-                thank_you.stimulus = ('<p>You have finished this task. Yay!</p><p>Percent correct = ').concat(Math.round(p_corr *100).toString()).concat('%</p><p>You have<b> ').concat(5-taskCounter-1).concat(' </b>tasks remaining.</p><p>Click <b>NEXT</b> to continue.</p>');
+                end_screen.stimulus = ('<p>You have finished this task. Yay!</p><p>Percent correct = ').concat(Math.round(p_corr *100).toString()).concat('%</p><p>You have<b> ').concat(5-taskCounter-1).concat(' </b>tasks remaining.</p><p>Click <b>NEXT</b> to continue.</p>');
             }
         }
-        timeline.push(start_screen_shape,example_loop_shape,example_wrap_shape,trial_shape,end_screen_shape);
-       var audioToPreload = [audio_shape,audioExamples_shape];
-       var imgToPreload = [img_shape,imgExamples_shape];
+        timeline.push(start_screen,example_loop,example_wrap,trial,end_screen);
+       var audioToPreload = [audio,audioExamples];
+       var imgToPreload = [img,imgExamples];
        
-       return [timeline,audioToPreload,imgToPreload]
+       return [audioToPreload,imgToPreload]
         
 }

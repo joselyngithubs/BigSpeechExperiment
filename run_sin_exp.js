@@ -1,4 +1,4 @@
-function run_sin_exp(timeline){ 
+function run_sin_exp(timeline,taskCounter){ 
 
 var stim = [
             [
@@ -287,18 +287,20 @@ var stim = [
         var end_screen = {
             type: 'html-button-response',
             stimulus: '',
-            choices: ['next'],
+            choices: ['next.png'],
+            button_html: '<img src="%choice%" class="nextbutton"/>',
             on_start: function(end_screen) {
-                let p_corr = total_correct / cur_trial;
+                let p_corr = numCorrect / currTrial;
                 
-                thank_you.stimulus = ('<p>You have finished this task. Yay!</p><p>Percent correct = ').concat(Math.round(p_corr *100).toString()).concat('%</p><p>You have<b> ').concat(5-taskCounter-1).concat(' </b>tasks remaining.</p><p>Click <b>NEXT</b> to continue.</p>');
+                end_screen.stimulus = ('<p>You have finished this task. Yay!</p><p>Percent correct = ').concat(Math.round(p_corr *100).toString()).concat('%</p><p>You have<b> ').concat(5-taskCounter-1).concat(' </b>tasks remaining.</p><p>Click <b>NEXT</b> to continue.</p>');
         }
+        };
         
-        timeline.push(start_screen_sin,calibrate_loop_sin,example_instruc_sin,example_sin,preblock_sin,trial_sin,break_screen_sin,example_instruc_sin,example_sin,preblock_sin,trial_sin,end_screen_sin);
+        timeline.push(start_screen,calibrate_loop,example_instruc,example,preblock,trial,break_screen,example_instruc,example,preblock,trial,end_screen);
 
-        var audioToPreload = [preload_stim_sin,'calibrate/calibration_tone.wav'];
+        var audioToPreload = [preload_stim,'calibrate/calibration_tone.wav'];
         var imgToPreload = [];
 
-       return [timeline,audioToPreload,imgToPreload]
+       return [audioToPreload,imgToPreload]
 
 }

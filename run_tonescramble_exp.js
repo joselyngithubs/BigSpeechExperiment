@@ -201,5 +201,5 @@ function run_tonescramble_exp(timeline,taskCounter){
 
     var imgToPreload = ['img/sad.png','img/happy.png','img/transparent_img.png'];
 
-    return [timeline,[],imgToPreload]
+    return [[],imgToPreload]
 }
