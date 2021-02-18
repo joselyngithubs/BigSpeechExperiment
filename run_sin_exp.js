@@ -142,7 +142,7 @@ var stim = [
             type: 'html-button-response',
             stimulus: '<div class="instruc"><p>Welcome to the Speech-In-Noise Task.</p><p>In this task, you will listen to multiple voices speaking at the same time. Please pay attention only to the voice whose sentences start with the word <b>BARON.</b> On each trial, please identify the <b>COLOR</b> and <b>NUMBER</b> that this person says.</p><p>There will be 2 blocks of 32 trials each. Click <b>NEXT</b> to begin the 1st block.</p></div>',
             choices: ['next.png'],
-            button_html: '<img src="%choice%" class="nextbutton"/>'
+            button_html: '<img src="%choice%" class="navbutton"/>'
         }
         
         var calibrate1 = {
@@ -181,7 +181,7 @@ var stim = [
             type: 'html-button-response',
             stimulus: currBlock==0? '<div class="instruc"><p>Before we start the next block of trials, let\'s go through some examples.</p><p>In these examples, you will only hear 1 voice at a time. Identify the <b>COLOR</b> and <b>NUMBER</b> that this voice says. You will click buttons on the screen to indicate your choice.</p><p>Click <b>NEXT</b> to try these examples.</p></div>' : '<div class="instruc"><p>In the next block of trials, you will repeat the task with a new voice. Before we start, let\'s go through some examples.</p><p>In these examples, you will only hear 1 voice at a time. Identify the <b>COLOR</b> and <b>NUMBER</b> that this voice says. You will click buttons on the screen to indicate your choice.</p><p>Click <b>NEXT</b> to continue.</p></div>',
             choices: ['next.png'],
-            button_html: '<img src="%choice%" class="nextbutton"/>',
+            button_html: '<img src="%choice%" class="navbutton"/>',
             on_start: function(){
                 isExample=true;
             }
@@ -249,7 +249,7 @@ var stim = [
             type: 'html-button-response',
             choices: ['next.png'],
             stimulus: "<p>Great! Let\'s continue. In the next 32 trials, you will hear multiple voices speaking at the same time. Please only pay attention to the voice who says <b>BARON</b>. This is the <b>same</b> voice who you heard in the examples.</p><p>Identify the <b>COLOR</b> and <b>NUMBER</b> that this voice says. You will click buttons on the screen to indicate your choice.</p><p>This task may be difficult. Please try your best!</p><p>Press <b>NEXT</b> to begin.</p>",
-            button_html: '<img src="%choice%" class="nextbutton"/>',       
+            button_html: '<img src="%choice%" class="navbutton"/>',       
             on_start: function(){
                 //reset for a "real" block
                 isExample = false;
@@ -272,7 +272,7 @@ var stim = [
             type: 'html-button-response',
             stimulus: '',
             choices: ['next.png'],
-            button_html: '<img src="%choice%" class="nextbutton"/>',
+            button_html: '<img src="%choice%" class="navbutton"/>',
             on_start: function(break_screen){
                 break_screen.stimulus = ('<div class="instruc"><p>Percent correct = ').concat(((numCorrect/currTrial)*100).toFixed(2)).concat('%</p><p>Please take a break!</p><p>When you are ready, please put on your headphones and click <b>NEXT</b> to continue to the next block.</p></div>');
                 
@@ -288,7 +288,7 @@ var stim = [
             type: 'html-button-response',
             stimulus: '',
             choices: ['next.png'],
-            button_html: '<img src="%choice%" class="nextbutton"/>',
+            button_html: '<img src="%choice%" class="navbutton"/>',
             on_start: function(end_screen) {
                 let p_corr = numCorrect / currTrial;
                 

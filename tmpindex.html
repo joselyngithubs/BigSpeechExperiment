@@ -10,10 +10,17 @@
         <link href="lib/jsPsych-master/css/jspsych.css" rel="stylesheet" type="text/css"></link>
     
         <style>
+            /* background color of the window */
+            body {
+                background-color: #B0C4DE;
+            }
+            
+            /* formatting for instructions text */
             .instruc {
                 width: 50vw;
-            } /* formatting for instructions text */
+            }
             
+            /* formatting for trial/feedback text */
             .trialtext {
                 width: 50vw;
                 position: fixed;
@@ -21,22 +28,18 @@
                 left: 15vw;
                 top: 25vh;
                 font-size:20px;
-            } /* formatting for trial/feedback text */
+            }
             
-            .nextbutton {
+            /* formatting of the next button and 'repeat' button */
+            .navbutton {
                 position: fixed;
                 bottom: 0;
                 left: 0;
                 width: 150px;
             }
-            .nextbutton:hover {
+            .navbutton:hover {
                 border: 1px solid #777;
-            } /* formatting of the next button */
-            
-            body {
-                background-color: #B0C4DE;
             }
-            /* background color of the window */
             
             /* Button grid for SIN task */
             .button {
@@ -56,42 +59,31 @@
             .button_red {background-color: #f44336;} /* Red */ 
             .button_white {background-color: #ffffff; color: black;} /* White */   
             
+            /* Contour images in Shape Task -- each contour image will be slightly < 1/3 of the screen height */
             .image {
-                height: 32vh; /* Each contour image will be slightly < 1/3 of the screen height */
+                height: 32vh; 
             }
             .image:hover {
                 border: 1px solid #777;
             }
-            /* Images will have a black border when hover over them */
             
-            .feedbackcorrect{
-                height: 32vh;
-                border: 3px solid #00FF00;
-            }
-            /* green border for correct answer */
-            
-            .feedbackwrong{
-                height: 32vh;
-                border: 3px solid #FF0000;
-            }
-            /* red border for incorrect */
-            
-            .repeatbutton {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                width: 150px;
-            }
-            .repeatbutton:hover {
-                border: 1px solid #777;
-            } /* formatting of the repeat button */
-            
+            /* All other clickable images -- tone-scramble emojis, Mandarin tone symbols */
             .imgbutton {
                 width: 30vw;
                 max-width: 30vh;
                 height: auto;
-            } /* emoji buttons in tone-scramble task */
-
+            }
+            .imgbutton:hover {
+                border: 1px solid #777;
+            }
+            
+            /* green border for correct answer; red border for incorrect */
+            .feedbackcorrect{
+                border: 3px solid #00FF00;
+            }
+            .feedbackwrong{
+                border: 3px solid #FF0000;
+            }
         </style>
     </head>
 
@@ -120,12 +112,15 @@
     <script src="run_tonescramble_exp.js"></script>
     <script src="run_shape_exp.js"></script>
     <script src="run_goldmsi.js"></script>   
-    <script src="run_lanna_exp.js"></script>   
+    <script src="run_lanna_exp.js"></script>
+    <script src="run_mandarin_exp.js"></script> 
 
     <script>
         var timeline_full = [];
         var trialData = [];                 // user data that gets saved to a csv at the end
         var taskCounter = 0;
+        
+        var mandarin_stuff = run_mandarin_exp(timeline_full,taskCounter++);
         
         var headphone_check = mcdermott_headphone_check(timeline_full);
         
@@ -167,8 +162,8 @@
         
         
         jsPsych.init({
-            preload_audio: [headphone_check[0],lanna_stuff,sin_stuff[0],shape_stuff[0]], // preload audio for faster execution
-            preload_images: [tonescramble_stuff[1],shape_stuff[1]],
+            preload_audio: [headphone_check[0],lanna_stuff,sin_stuff[0],shape_stuff[0],mandarin_stuff[0]], // preload audio for faster execution
+            preload_images: [tonescramble_stuff[1],shape_stuff[1],mandarin_stuff[1]],
             timeline: timeline_full
         });
   

@@ -28,7 +28,7 @@ function run_tonescramble_exp(timeline,taskCounter){
         type: 'html-button-response',
         stimulus: '<div class="instruc"><p><b>Welcome to the TONE-SCRAMBLES TASK!</b></p><p>In this task, you will listen to tone sequences and judge them as <b>Type 1 (Minor/Sad)</b> or <b>Type 2 (Major/Happy)</b>.</p><p>Please put on your headphones and click <b>NEXT</b> to listen to some examples of these stimuli.</p></div>',
         choices: ['next.png'],
-        button_html: '<img src="%choice%" class="nextbutton"/>',
+        button_html: '<img src="%choice%" class="navbutton"/>',
         post_trial_gap: 600
     }
 
@@ -78,7 +78,7 @@ function run_tonescramble_exp(timeline,taskCounter){
         type: 'html-button-response',
         stimulus: '<div class="instruc"><p><b>READY?</b></p><p>To recap, you will listen to 3 sets of 50 tone sequences. You will be asked if you heard <b>Type 1 (Minor/Sad)</b> or <b>Type 2 (Major/Happy)</b>.</p><p>You will receive feedback for each response. You will have the opportunity to take a break after each set of 50.</p><p>Please put your headphones on now before beginning and try your best!</p><p>Click <b>NEXT</b> to begin.</p></div>',
         choices: ['next.png'],
-        button_html: '<img src="%choice%" class="nextbutton"/>',
+        button_html: '<img src="%choice%" class="navbutton"/>',
         post_trial_gap: 600
     }
 
@@ -179,7 +179,7 @@ function run_tonescramble_exp(timeline,taskCounter){
         type: "html-button-response",
         stimulus: "<p>You are partway through this task!</p><p>You can take a break, but do NOT refresh the page or use your browser's forward/back buttons, or you will lose your progress.</p><p>Click <b>NEXT</b> to resume the experiment.</p><p>To recap:<br>In this task, you are judging tone sequences as <b>Type 1 (Minor/Sad)</b> or <b>Type 2 (Major/Happy)</b>.</p>",
         choices: ['next.png'],
-        button_html: '<img src="%choice%" class="nextbutton"/>'
+        button_html: '<img src="%choice%" class="navbutton"/>'
     }            
 
     //Thank you page
@@ -187,7 +187,7 @@ function run_tonescramble_exp(timeline,taskCounter){
         type: "html-button-response",
         stimulus: "",
         choices: ['next.png'],
-        button_html: '<img src="%choice%" class="nextbutton"/>',
+        button_html: '<img src="%choice%" class="navbutton"/>',
         on_start: function(thank_you) {
             //Calculate percent correct
             let p_corr = total_correct / cur_trial;
