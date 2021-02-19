@@ -1,4 +1,4 @@
-function run_mandarin_exp(timeline,taskCounter){
+function run_mandarin_exp(timeline,taskCounter,taskID){
 
 // Mandarin syllables discrimination task       
         
@@ -61,8 +61,8 @@ function run_mandarin_exp(timeline,taskCounter){
         // Start Screen (instructions)
         var start_screen = {
             type: 'html-button-response',
-            stimulus: '<div class="instruc"><p><b>Welcome to the MANDARIN SYLLABLES TASK!</b></p><p>You will listen to Mandarin Chinese syllables and identify which tone they are spoken in.</p><p>There are 4 possible tones, which attribute different lexical meanings to a syllable.</p><p>Click <b>NEXT</b> to learn more about these tones.</p></div>',
-            choices: ['next.png'],
+            stimulus: ('<div class="instruc"><p>Task ').concat(taskCounter).concat(' of 7</p><p><b>Welcome to the MANDARIN SYLLABLES TASK!</b></p><p>You will listen to Mandarin Chinese syllables and identify which tone they are spoken in.</p><p>There are 4 possible tones, which attribute different lexical meanings to a syllable.</p><p>Click <b>NEXT</b> to learn more about these tones.</p></div>'),
+            choices: ['img/next.png'],
             button_html: '<img src="%choice%" class="navbutton"/>'
         }
         timeline.push(start_screen);
@@ -70,7 +70,7 @@ function run_mandarin_exp(timeline,taskCounter){
         var tone_summary = {
             type: 'html-button-response',
             stimulus: toneDescription.concat('<p>Please put on your headphones and click <b>NEXT</b> to hear examples of these tones.</p>'),
-            choices: ['next.png'],
+            choices: ['img/next.png'],
             button_html: '<img src="%choice%" class="navbutton"/>'
         }
         //timeline.push(tone_summary);
@@ -87,7 +87,7 @@ function run_mandarin_exp(timeline,taskCounter){
                 
                 if(listened.every(Boolean)){ // if subject has played all tones, then they can proceed
                     example_display.prompt = example_display.prompt.concat('<p>When you are ready to move on, click <b>NEXT</b>.</p>');
-                    example_display.choices = ['MandarinStims/highlevel.png','MandarinStims/lowrising.png','MandarinStims/lowdipping.png', 'MandarinStims/highfalling.png','next.png'];
+                    example_display.choices = ['MandarinStims/highlevel.png','MandarinStims/lowrising.png','MandarinStims/lowdipping.png', 'MandarinStims/highfalling.png','img/next.png'];
                     example_display.button_html = ['<img src="%choice%" class="imgbutton"/>','<img src="%choice%" class="imgbutton"/>','<img src="%choice%" class="imgbutton"/>','<img src="%choice%" class="imgbutton"/>','<img src="%choice%" class="navbutton"/>'];
                 }                
             },
@@ -128,7 +128,7 @@ function run_mandarin_exp(timeline,taskCounter){
         var preblock = {
             type: 'html-button-response',
             stimulus: '<div class="instruc"><p><b>READY?</b></p><p>To recap, you will listen to 40 syllables and will be asked which of the 4 tone patterns you heard. You will receive feedback for each response.</p><p>Please put your headphones on now before beginning and try your best!</p><p>Click <b>NEXT</b> to begin.</p></div>',
-            choices: ['next.png'],
+            choices: ['img/next.png'],
             button_html: '<img src="%choice%" class="navbutton"/>' 
         }
         timeline.push(preblock);
@@ -203,6 +203,8 @@ function run_mandarin_exp(timeline,taskCounter){
                  
                  // save data
                  trialData = trialData.concat({
+                     taskCounter: taskCounter,
+                     taskID: taskID,
                      trialNum: currTrial+1,
                      stim: MandarinStims[order[currTrial]],
                      tone: tone[order[currTrial]],
@@ -225,11 +227,11 @@ function run_mandarin_exp(timeline,taskCounter){
         var end_screen = {
             type: 'html-button-response',
             stimulus: '',
-            choices: ['next.png'],
+            choices: ['img/next.png'],
             button_html: '<img src="%choice%" class="navbutton"/>',
             on_start: function(end_screen) {
                 
-               end_screen.stimulus = ('<p>You have finished this task. Yay!</p><p>Percent correct = ').concat(((numCorrect/currTrial)*100).toFixed(2)).concat('%</p><p>You have<b> ').concat(5-taskCounter-1).concat(' </b>tasks remaining.</p><p>Click <b>NEXT</b> to continue.</p>');
+               end_screen.stimulus = ('<p>You have finished this task. Yay!</p><p>Percent correct = ').concat(((numCorrect/currTrial)*100).toFixed(2)).concat('%</p><p>You have<b> ').concat(7-taskCounter).concat(' </b>tasks remaining.</p><p>Click <b>NEXT</b> to continue.</p>');
                 
                 }
         }

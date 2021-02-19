@@ -1,4 +1,4 @@
-function run_goldmsi(timeline){
+function run_goldmsi(timeline,taskCounter,taskID){
         
             var p_resp = [];
             var p_score = 0;
@@ -27,7 +27,7 @@ function run_goldmsi(timeline){
             
             var perceptual_abilities = {
                 type: 'survey-likert',
-                preamble: '<div class="instruc"><p>This survey asks about your musical abilities and interests.</p><p>Please respond to the statements below. (Page 1 of 3)</p></div>',
+                preamble: ('<div class="instruc"><p>Task ').concat(taskCounter).concat(' of 7</p><p>Goldsmith Musical Sophistication Index</p><p>This survey asks about your musical abilities and interests.</p><p>Please respond to the statements below. (Page 1 of 3)</p></div>'),
                 questions: [
                     {prompt: "I am able to judge whether someone is a good singer or not.", name: pq[0], labels: scale_1,required:true},
                     {prompt: "I usually know when I'm hearing a song for the first time.", name: pq[1], labels: scale_1,required:true},
@@ -46,6 +46,8 @@ function run_goldmsi(timeline){
                         let tmp_score = pq_idx[i]==0? (p_resp[pq[i]]*-1+7):(p_resp[pq[i]]+1);
                         
                         trialData = trialData.concat({
+                            taskCounter: taskCounter,
+                            taskID: taskID,
                             subscale: 'perceptual',
                             q: pq[i],
                             index: pq_idx[i],
@@ -58,6 +60,8 @@ function run_goldmsi(timeline){
                     
                     // store total p score
                     trialData = trialData.concat({
+                        taskCounter: taskCounter,
+                        taskID: taskID,
                         subscale: 'perceptual',
                         q: NaN,
                         index: NaN,
@@ -88,6 +92,8 @@ function run_goldmsi(timeline){
                         let tmp_score = tq_idx[i]==0? (t_resp[tq[i]]*-1+7):(t_resp[tq[i]]+1);
                         
                         trialData = trialData.concat({
+                            taskCounter: taskCounter,
+                            taskID: taskID,
                             subscale: 'training',
                             q: tq[i],
                             index: tq_idx[i],
@@ -100,6 +106,8 @@ function run_goldmsi(timeline){
                     
                     // store total p score
                     trialData = trialData.concat({
+                        taskCounter: taskCounter,
+                        taskID: taskID,
                         subscale: 'training',
                         q: NaN,
                         index: NaN,
@@ -142,6 +150,8 @@ function run_goldmsi(timeline){
                         let tmp_score = sq_idx[i]==0? (s_resp[sq[i]]*-1+7):(s_resp[sq[i]]+1);
                         
                         trialData = trialData.concat({
+                            taskCounter: taskCounter,
+                            taskID: taskID,
                             subscale: 'sophistication',
                             q: sq[i],
                             index: sq_idx[i],
@@ -154,6 +164,8 @@ function run_goldmsi(timeline){
                     
                     // store total p score
                     trialData = trialData.concat({
+                        taskCounter: taskCounter,
+                        taskID: taskID,
                         subscale: 'sophistication',
                         q: NaN,
                         index: NaN,
@@ -167,8 +179,8 @@ function run_goldmsi(timeline){
             //Thank you page
             var end_screen = {
                 type: "html-button-response",
-                stimulus: 'Survey complete.<br>Press Next to continue.',
-                choices: ['next.png']
+                stimulus: 'Survey responses have been recorded.<br>Press Next to continue.',
+                choices: ['Next']
             }
             timeline.push(end_screen);        
             

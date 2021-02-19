@@ -1,4 +1,4 @@
-function run_tonescramble_exp(timeline,taskCounter){
+function run_tonescramble_exp(timeline,taskCounter,taskID){
     
     //Number of trials
     var ntrials = 150; //total
@@ -26,8 +26,8 @@ function run_tonescramble_exp(timeline,taskCounter){
     // Start Screen (instructions)
     var start_screen = {
         type: 'html-button-response',
-        stimulus: '<div class="instruc"><p><b>Welcome to the TONE-SCRAMBLES TASK!</b></p><p>In this task, you will listen to tone sequences and judge them as <b>Type 1 (Minor/Sad)</b> or <b>Type 2 (Major/Happy)</b>.</p><p>Please put on your headphones and click <b>NEXT</b> to listen to some examples of these stimuli.</p></div>',
-        choices: ['next.png'],
+        stimulus: ('<div class="instruc"><p>Task ').concat(taskCounter).concat(' of 7</p><p><b>Welcome to the TONE-SCRAMBLES TASK!</b></p><p>In this task, you will listen to tone sequences and judge them as <b>Type 1 (Minor/Sad)</b> or <b>Type 2 (Major/Happy)</b>.</p><p>Please put on your headphones and click <b>NEXT</b> to listen to some examples of these stimuli.</p></div>'),
+        choices: ['img/next.png'],
         button_html: '<img src="%choice%" class="navbutton"/>',
         post_trial_gap: 600
     }
@@ -49,7 +49,7 @@ function run_tonescramble_exp(timeline,taskCounter){
         },
         on_finish: function(){
             //Stop scramble if still playing
-            stop_scramble();
+            stop_stim();
             }
         }
 
@@ -70,21 +70,27 @@ function run_tonescramble_exp(timeline,taskCounter){
         },
         on_finish: function(){
             //Stop scramble if still playing
-            stop_scramble();
+            stop_stim();
             }
         }
 
+    var moveOn;
     var example_wrap = {
         type: 'html-button-response',
-        stimulus: '<div class="instruc"><p><b>READY?</b></p><p>To recap, you will listen to 3 sets of 50 tone sequences. You will be asked if you heard <b>Type 1 (Minor/Sad)</b> or <b>Type 2 (Major/Happy)</b>.</p><p>You will receive feedback for each response. You will have the opportunity to take a break after each set of 50.</p><p>Please put your headphones on now before beginning and try your best!</p><p>Click <b>NEXT</b> to begin.</p></div>',
-        choices: ['next.png'],
-        button_html: '<img src="%choice%" class="navbutton"/>',
-        post_trial_gap: 600
+        stimulus: '<div class="instruc"><p><b>READY?</b></p><p>To repeat the examples, press <b>REPEAT</b>.</p><p>To recap, in this experiment you will listen to 3 sets of 50 tone sequences. You will be asked if you heard <b>Type 1 (Minor/Sad)</b> or <b>Type 2 (Major/Happy)</b>.</p><p>You will receive feedback for each response. You will have the opportunity to take a break after each set of 50. Please try your best!</p><p>When you are ready to start the experiment, please put your headphones and click <b>START</b>.</p></div>',
+        choices: ['REPEAT','START'],
+        post_trial_gap: 600,
+        on_finish: function(data){
+            moveOn = Number(data.button_pressed);
+        }
     }
 
     //Example loop
     var example_loop = {
-        timeline: [example1, example2, example1, example2, example_wrap]                
+        timeline: [example1, example2, example1, example2, example_wrap],
+        loop_function: function() {
+                return moveOn==0;
+            }
     }
 
     //Playback screen
@@ -141,7 +147,8 @@ function run_tonescramble_exp(timeline,taskCounter){
 
             //Append the trial parameters and results to the data array
             trialData = trialData.concat({
-
+                taskCounter: taskCounter,
+                taskID: taskID,
                 cur_trial: cur_trial,
                 response: trial_resp,
                 scramble_type: cur_type,                        
@@ -160,7 +167,7 @@ function run_tonescramble_exp(timeline,taskCounter){
         post_trial_gap: 150,
         on_start: function(feedback){
             //Stop scramble if it's still going (should be redundant due to playback trial duration)
-            stop_scramble();
+            stop_stim();
             if (last_correct){
                 feedback.stimulus = "<p style='color:green'><b>CORRECT</b></p>"
             }else{
@@ -178,7 +185,7 @@ function run_tonescramble_exp(timeline,taskCounter){
     var break_screen = {
         type: "html-button-response",
         stimulus: "<p>You are partway through this task!</p><p>You can take a break, but do NOT refresh the page or use your browser's forward/back buttons, or you will lose your progress.</p><p>Click <b>NEXT</b> to resume the experiment.</p><p>To recap:<br>In this task, you are judging tone sequences as <b>Type 1 (Minor/Sad)</b> or <b>Type 2 (Major/Happy)</b>.</p>",
-        choices: ['next.png'],
+        choices: ['img/next.png'],
         button_html: '<img src="%choice%" class="navbutton"/>'
     }            
 
@@ -186,13 +193,13 @@ function run_tonescramble_exp(timeline,taskCounter){
     var thank_you = {
         type: "html-button-response",
         stimulus: "",
-        choices: ['next.png'],
+        choices: ['img/next.png'],
         button_html: '<img src="%choice%" class="navbutton"/>',
         on_start: function(thank_you) {
             //Calculate percent correct
             let p_corr = total_correct / cur_trial;
 
-            thank_you.stimulus = ('<p>You have finished this task. Yay!</p><p>Percent correct = ').concat(Math.round(p_corr *100).toString()).concat('%</p><p>You have<b> ').concat(5-taskCounter-1).concat(' </b>tasks remaining.</p><p>Click <b>NEXT</b> to continue.</p>');
+            thank_you.stimulus = ('<p>You have finished this task. Yay!</p><p>Percent correct = ').concat(Math.round(p_corr *100).toString()).concat('%</p><p>You have<b> ').concat(7-taskCounter).concat(' </b>tasks remaining.</p><p>Click <b>NEXT</b> to continue.</p>');
         }
     }
 

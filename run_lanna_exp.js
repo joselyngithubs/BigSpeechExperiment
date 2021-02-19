@@ -1,6 +1,6 @@
 <!-- Speech perception task a la Morrill et al 2015 paper -->
 
-function run_lanna_exp(timeline,taskCounter){
+function run_lanna_exp(timeline,taskCounter,taskID){
         
         var nBlocks = 2;
         var nTrials = 48;
@@ -27,8 +27,8 @@ function run_lanna_exp(timeline,taskCounter){
         // Start Screen (instructions)
         var start_screen = {
             type: 'html-button-response',
-            stimulus: '<div class="instruc"><p><b>Welcome to the LANNAMARAINE TASK!</b></p><p>You will listen to speech stimuli and judge if they are Type 1 or Type 2.</p><p>Please put on your headphones and click <b>NEXT</b> to listen to some examples of these stimuli.</p></div>',
-            choices: ['next.png'],
+            stimulus: ('<div class="instruc"><p>Task ').concat(taskCounter).concat(' of 7</p><p><b>Welcome to the LANNAMARAINE TASK!</b></p><p>You will listen to speech stimuli and judge if they are Type 1 or Type 2.</p><p>Please put on your headphones and click <b>NEXT</b> to listen to some examples of these stimuli.</p></div>'),
+            choices: ['img/next.png'],
             button_html: '<img src="%choice%" class="navbutton"/>'
         }
         timeline.push(start_screen);
@@ -38,7 +38,7 @@ function run_lanna_exp(timeline,taskCounter){
         var example1 = {
             type: 'audio-button-response',
             stimulus: '',
-            choices: ['next.png'],
+            choices: ['img/next.png'],
             button_html: '<img src="%choice%" class="navbutton"/>',
             on_start: function(example1){
                 example1.stimulus = 'LannaStims/lanna1.wav';
@@ -50,7 +50,7 @@ function run_lanna_exp(timeline,taskCounter){
         var example2 = {
             type: 'audio-button-response',
             stimulus: '',
-            choices: ['next.png'],
+            choices: ['img/next.png'],
             button_html: '<img src="%choice%" class="navbutton"/>',
             on_start: function(example2){
                 example2.stimulus = 'LannaStims/lanna6.wav';
@@ -71,7 +71,7 @@ function run_lanna_exp(timeline,taskCounter){
         var example_wrap = {
             type: 'html-button-response',
             stimulus: '<div class="instruc"><p><b>READY?</b></p><p>To recap, you will listen to 2 blocks of 48 stimuli and will be asked if you heard Type 1 or Type 2. You will receive feedback for each response.</p><p>Please put your headphones on now before beginning and try your best!</p><p>Click <b>NEXT</b> to begin.</p></div>',
-            choices: ['next.png'],
+            choices: ['img/next.png'],
             button_html: '<img src="%choice%" class="navbutton"/>' 
         }
         timeline.push(example_wrap);
@@ -134,6 +134,8 @@ function run_lanna_exp(timeline,taskCounter){
                  
                  // save data
                  trialData = trialData.concat({
+                     taskCounter: taskCounter,
+                     taskID: taskID,
                      trialNum: currTrial+1,
                      stim: order[currBlock][currTrial],
                      correctAnswer: corrAns,
@@ -155,7 +157,7 @@ function run_lanna_exp(timeline,taskCounter){
         var break_screen = {
             type: 'html-button-response',
             stimulus: '',
-            choices: ['next.png'],
+            choices: ['img/next.png'],
             button_html: '<img src="%choice%" class="navbutton"/>',
             on_start: function(break_screen){
                 break_screen.stimulus = ('<div class="instruc"><p>Percent correct = ').concat(((numCorrect/currTrial)*100).toFixed(2)).concat('%</p><p>Please take a break!</p><p>When you are ready, please put on your headphones and click <b>NEXT</b> to continue to the next block.</p><p>To recap, you will listen to speech stimuli and will be asked if you heard Type 1 or Type 2.</p></div>');
@@ -172,15 +174,15 @@ function run_lanna_exp(timeline,taskCounter){
         var end_screen = {
             type: 'html-button-response',
             stimulus: '',
-            choices: ['next.png'],
+            choices: ['img/next.png'],
             button_html: '<img src="%choice%" class="navbutton"/>',
             on_start: function(end_screen) {
                 
-                end_screen.stimulus = ('<p>You have finished this task. Yay!</p><p>Percent correct = ').concat(((numCorrect/currTrial)*100).toFixed(2)).concat('%</p><p>You have<b> ').concat(5-taskCounter-1).concat(' </b>tasks remaining.</p><p>Click <b>NEXT</b> to continue.</p>');
+                end_screen.stimulus = ('<p>You have finished this task. Yay!</p><p>Percent correct = ').concat(((numCorrect/currTrial)*100).toFixed(2)).concat('%</p><p>You have<b> ').concat(7-taskCounter).concat(' </b>tasks remaining.</p><p>Click <b>NEXT</b> to continue.</p>');
               
             }
         }
         timeline.push(end_screen);
         
-return [LannaStims];
+return [LannaStims,[]];
 }

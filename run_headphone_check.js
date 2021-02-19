@@ -1,4 +1,4 @@
-function mcdermott_headphone_check(timeline){
+function run_headphone_check(timeline,taskCounter,taskID){
 // Headphone Check (from McDermott lab, used in Woods et al. 2017)
 // In this version, the timeline from a main index.html page is passed in. The headphoneCheck score is saved to a global variable trialData.
     
@@ -19,7 +19,7 @@ function mcdermott_headphone_check(timeline){
     var calibrate1 = {
         type: 'html-button-response',
         stimulus: '',
-        prompt: '<p><b>Calibration</b></p><p>Please put on your headphones.</p><p>Press "calibrate" and adjust your computer\'s volume until the calibration noise is at a loud but comfortable level.</p><p>Play the calibration sound as many times as you like. Press <b>Continue</b> when you are finished calibrating.</p><p>If the next page does not load, please switch to Google Chrome browser.</p>',
+        prompt: '<p><b>Calibration</b></p><p>Please put on your headphones.</p><p>Turn your computer volume all the way DOWN. Then, press "calibrate" and increase your computer\'s volume until the calibration noise is at a loud but comfortable level.</p><p>Play the calibration sound as many times as you like. Press <b>Continue</b> when you are finished calibrating.</p><p>If the next page does not load, please switch to Google Chrome browser.</p>',
         choices: ['Calibrate','Continue'],
         on_finish: function(calibrate1){
             userAns= calibrate1.button_pressed;
@@ -89,7 +89,9 @@ function mcdermott_headphone_check(timeline){
         choices: ['Continue'],
         on_start: function(){
             trialData = trialData.concat({
-                    headphoneCheck: calibrateScore
+                taskCounter: taskCounter,
+                taskID: taskID,
+                headphoneCheck: calibrateScore
             })
         }
     }            

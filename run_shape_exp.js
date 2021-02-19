@@ -1,4 +1,4 @@
-function run_shape_exp(timeline,taskCounter){
+function run_shape_exp(timeline,taskCounter,taskID){
        
         var currTrial = 0;                  // note that trials are 0-35 rather than 1-36
         var currStim = ['','',''];          // the set of 3 images shown on each trial
@@ -21,19 +21,19 @@ function run_shape_exp(timeline,taskCounter){
                 'ShapeStims_shapes/dulenan.png',
                 'ShapeStims_shapes/bevedis.png',
                 'ShapeStims_shapes/biravu.png',
-                'next.png'                
+                'img/next.png'                
             ],
             [
                 'ShapeStims_shapes/dumulene.png',
                 'ShapeStims_shapes/binelud.png',
                 'ShapeStims_shapes/dalorig.png',
-                'next.png'
+                'img/next.png'
             ],
             [
                 'ShapeStims_shapes/galelom.png',
                 'ShapeStims_shapes/binenule.png',
                 'ShapeStims_shapes/damidil.png',
-                'next.png'
+                'img/next.png'
             ]
         ]
         var audioExamples = [
@@ -154,8 +154,8 @@ function run_shape_exp(timeline,taskCounter){
         // Start Screen (instructions)
         var start_screen = {
             type: 'html-button-response',
-            stimulus: '<div class="instruc"><p><b>Welcome to the SHAPE TASK!</b></p><p>You will listen to 36 nonsense words. For each word, you will choose the shape that best matches the pitch contour of the word. So, you should only pay attention to the changes in PITCH in each word, and choose the shape that best represents these pitch changes.</p><p>Please put on your headphones and click <b>NEXT</b> to listen to some examples of words for each shape.</p></div>',
-            choices: ['next.png'],
+            stimulus: ('<div class="instruc"><p>Task ').concat(taskCounter).concat(' of 7</p><p><b>Welcome to the SHAPE TASK!</b></p><p>You will listen to 36 nonsense words. For each word, you will choose the shape that best matches the pitch contour of the word. So, you should only pay attention to the changes in PITCH in each word, and choose the shape that best represents these pitch changes.</p><p>Please put on your headphones and click <b>NEXT</b> to listen to some examples of words for each shape.</p></div>'),
+            choices: ['img/next.png'],
             button_html: '<img src="%choice%" class="navbutton"/>'
         }
         
@@ -228,7 +228,7 @@ function run_shape_exp(timeline,taskCounter){
         var example_wrap = {
             type: 'html-button-response',
             stimulus: '<div class="instruc"><p><b>READY?</b></p><p>To recap, you will listen to 36 nonsense words.</p><p>On each trial, you will hear 1 word and see 3 shapes.</p><p>Your job is to choose the shape that best matches the pitch contour of the word.</p><p>You will indicate your choice by clicking the shape.</p><p>You will receive feedback on whether your answer is correct.</p><p>Please put your headphones on now before beginning and try your best!</p><p>Click <b>NEXT</b> to begin.</p></div>',
-            choices: ['next.png'],
+            choices: ['img/next.png'],
             button_html: '<img src="%choice%" class="navbutton"/>' 
         }
         
@@ -290,7 +290,7 @@ function run_shape_exp(timeline,taskCounter){
             stimulus: "",
             on_start: function(userResp){
                 userResp.prompt = ("<div class='trialtext'><b>Trial ").concat((currTrial+1).toString()).concat(" of 36</b><br>Click the shape that best matches the pitch contour of the word that you heard.<br>To listen to the word again, click <b>REPEAT</b>.</div>");
-                userResp.choices = [currStim[0],currStim[1],currStim[2],'repeat.png'];
+                userResp.choices = [currStim[0],currStim[1],currStim[2],'img/repeat.png'];
                 
                 userResp.button_html = [
                     '<img src="%choice%" style = "position:fixed; top: 1vh; right: 10vw" class="image"/>',
@@ -348,6 +348,8 @@ function run_shape_exp(timeline,taskCounter){
                  
                  // save data
                  trialData = trialData.concat({
+                     taskCounter: taskCounter,
+                     taskID: taskID,
                      trialNum: currTrial+1,
                      condition: condition,
                      stimSet0: currStim[0],
@@ -376,12 +378,12 @@ function run_shape_exp(timeline,taskCounter){
         var end_screen = {
             type: 'html-button-response',
             stimulus: '',
-            choices: ['next.png'],
+            choices: ['img/next.png'],
             button_html: '<img src="%choice%" class="navbutton"/>',
             on_start: function(end_screen) {
                 let p_corr = numCorrect / currTrial;
                 
-                end_screen.stimulus = ('<p>You have finished this task. Yay!</p><p>Percent correct = ').concat(Math.round(p_corr *100).toString()).concat('%</p><p>You have<b> ').concat(5-taskCounter-1).concat(' </b>tasks remaining.</p><p>Click <b>NEXT</b> to continue.</p>');
+                end_screen.stimulus = ('<p>You have finished this task. Yay!</p><p>Percent correct = ').concat(Math.round(p_corr *100).toString()).concat('%</p><p>You have<b> ').concat(7-taskCounter).concat(' </b>tasks remaining.</p><p>Click <b>NEXT</b> to continue.</p>');
             }
         }
         timeline.push(start_screen,example_loop,example_wrap,trial,end_screen);

@@ -88,85 +88,123 @@
     </head>
 
     <body>
-    <p>Preparing the experiment... This should only take a few seconds.</p>
-    
-    <!-- data mgmt, math helper, and sound generation functions -->
-    <script src="lib/data_mgmt.js" type="text/javascript"></script>
-    <script src="lib/math_helpers.js" type="text/javascript"></script>
-    <script src="lib/sound_functions_pd_all.js" type="text/javascript"></script>
-        
-    <!-- PapaParse functions -->
-    <script src="lib/PapaParse/papaparse.js"></script>
+        <p>Preparing the experiment... This should only take a few seconds.</p>
 
-    <!-- JsPsych functions -->
-    <script src="lib/jsPsych-master/jspsych.js"></script>
-    <script src="lib/jsPsych-master/plugins/jspsych-html-keyboard-response.js"></script>
-    <script src="lib/jsPsych-master/plugins/jspsych-audio-keyboard-response.js"></script>
-    <script src="lib/jsPsych-master/plugins/jspsych-audio-button-response.js"></script>
-    <script src="lib/jsPsych-master/plugins/jspsych-html-button-response.js"></script>
-    <script src="lib/jsPsych-master/plugins/jspsych-html-button-response_grid.js"></script>
-    <script src="lib/jsPsych-master/plugins/jspsych-survey-html-form.js"></script>
-    <script src="lib/jsPsych-master/plugins/jspsych-survey-likert.js"></script>
-    <script src="mcdermott_headphone_check.js"></script>
-    <script src="run_sin_exp.js"></script>
-    <script src="run_tonescramble_exp.js"></script>
-    <script src="run_shape_exp.js"></script>
-    <script src="run_goldmsi.js"></script>   
-    <script src="run_lanna_exp.js"></script>
-    <script src="run_mandarin_exp.js"></script> 
+        <!-- data mgmt, math helper, and sound generation functions -->
+        <script src="lib/data_mgmt.js" type="text/javascript"></script>
+        <script src="lib/math_helpers.js" type="text/javascript"></script>
+        <script src="lib/sound_functions_pd_all.js" type="text/javascript"></script>
 
-    <script>
-        var timeline_full = [];
-        var trialData = [];                 // user data that gets saved to a csv at the end
-        var taskCounter = 0;
-        
-        var mandarin_stuff = run_mandarin_exp(timeline_full,taskCounter++);
-        
-        var headphone_check = mcdermott_headphone_check(timeline_full);
-        
-        var lanna_stuff = run_lanna_exp(timeline_full,taskCounter++);
-        
-        var sin_stuff = run_sin_exp(timeline_full,taskCounter++);
-        
-        var tonescramble_stuff = run_tonescramble_exp(timeline_full,taskCounter++);
-        
-        var shape_stuff = run_shape_exp(timeline_full,taskCounter++);
-        
-        run_goldmsi(timeline_full);
-        
-        var final_end_screen = {
-            type: 'html-button-response',
-            stimulus: '',
-            choices: ['next'],
-            on_start: function(end_screen) {
-                
-                end_screen.stimulus = ('<p>You have finished all tasks. Thank you for participating! You will receive your credit within a week.</p>');
-                
-                //Save data locally as csv. Source: https://github.com/mholt/PapaParse/issues/175
-                var blob = new Blob([ConvertToCSV(trialData)]);
-                if (window.navigator.msSaveOrOpenBlob)  // IE hack; see http://msdn.microsoft.com/en-us/library/ie/hh779016.aspx
-                    window.navigator.msSaveBlob(blob, "data_ALL.csv");
-                else
-                {
-                    var a = window.document.createElement("a");
-                    a.href = window.URL.createObjectURL(blob, {type: "text/plain"});
-                    a.download = "data_ALL.csv";
-                    document.body.appendChild(a);
-                    a.click();  // IE: "Access is denied"; see: https://connect.microsoft.com/IE/feedback/details/797361/ie-10-treats-blob-url-as-cross-origin-and-denies-access
-                    document.body.removeChild(a);
+        <!-- PapaParse functions -->
+        <script src="lib/PapaParse/papaparse.js"></script>
+
+        <!-- JsPsych functions -->
+        <script src="lib/jsPsych-master/jspsych.js"></script>
+        <script src="lib/jsPsych-master/plugins/jspsych-html-keyboard-response.js"></script>
+        <script src="lib/jsPsych-master/plugins/jspsych-audio-keyboard-response.js"></script>
+        <script src="lib/jsPsych-master/plugins/jspsych-audio-button-response.js"></script>
+        <script src="lib/jsPsych-master/plugins/jspsych-html-button-response.js"></script>
+        <script src="lib/jsPsych-master/plugins/jspsych-html-button-response_grid.js"></script>
+        <script src="lib/jsPsych-master/plugins/jspsych-survey-html-form.js"></script>
+        <script src="lib/jsPsych-master/plugins/jspsych-survey-likert.js"></script>
+        <script src="lib/jsPsych-master/plugins/jspsych-external-html.js"></script>
+        <script src="lib/jsPsych-master/plugins/jspsych-survey-multi-choice.js"></script>
+        <script src="lib/jsPsych-master/plugins/jspsych-survey-text.js"></script>    
+        <script src="intro.js"></script>
+        <script src="run_headphone_check.js"></script>
+        <script src="run_lanna_exp.js"></script>
+        <script src="run_shape_exp.js"></script>
+        <script src="run_mandarin_exp.js"></script>
+        <script src="run_pitchdiff_exp.js"></script>
+        <script src="run_sin_exp.js"></script>
+        <script src="run_tonescramble_exp.js"></script>
+        <script src="run_goldmsi.js"></script>         
+
+        <script>
+            // Initialize the audio context
+            function init() {
+
+              // Initialize the audio context and set sample rate
+              aud_ctx = new AudioContext();
+              fs = aud_ctx.sampleRate;
+            }
+            init();
+        </script>
+
+        <script>
+            var timeline_full = [];             // main timeline containing all events
+            var trialData = [];                 // all user data that gets saved to a csv at the end
+            var taskCounter = 0;                // iterate through the 7 tasks
+            var items_to_preload = [[],[]];     // [[audio],[img]]
+
+            var taskOrder = jsPsych.randomization.repeat([1,2,3,4,5,6],1); // the tasks that will get shuffled
+
+            var myTasks = [
+                {task: run_headphone_check, id: 0},
+                {task: run_lanna_exp, id: 1},
+                {task: run_shape_exp, id: 2},
+                {task: run_mandarin_exp, id: 3},
+                {task: run_pitchdiff_exp, id: 4},
+                {task: run_sin_exp, id: 5},
+                {task: run_tonescramble_exp, id: 6},
+                {task: run_goldmsi, id: 7}
+            ];
+
+            // Welcome, Consent, Survey, Etc
+            var inits;
+            intro(timeline_full,-1,-1);
+
+            // Run headphone check (first)
+            var headphone_check = myTasks[0]['task'](timeline_full,taskCounter++,0);
+            
+            // Instructions for what the experiment will entail
+            var main_instructions = {
+                type: 'html-button-response',
+                stimulus: '<p>Welcome to the Big Speech Experiment.</p><p>This experiment consists of 7 tasks. Each task involves listening to some sounds (speech or tones) and judging these sounds. The last task involves answering some questions about your musical background and does not require any listening.</p><p>You can take a break between each task, but be careful not to exit out of the experiment or your progress will be lost.</p><p>Please wear your headphones for all tasks and try your best.</p><p>When you are ready to begin the first task, press <b>START</b>.</p>',
+                choices: ['START']
+            }
+            timeline_full.push(main_instructions);  
+
+            // shuffle task order and call each task, setting up audio/img to preload
+            for(var iter=0;iter<=5;iter++){
+                [items_to_preload[0][iter],items_to_preload[1][iter]] = myTasks[taskOrder[iter]]['task'](timeline_full,taskCounter++,taskOrder[iter]);
+            }        
+
+            // Run GoldMSI survey (last)
+            myTasks[7]['task'](timeline_full,taskCounter++,7);
+
+            var final_end_screen = {
+                type: 'html-keyboard-response',
+                stimulus: '',
+                choices: '',
+                on_start: function(end_screen) {
+
+                    end_screen.stimulus = ('<p>You have finished all tasks! Thank you for your participation.</p><p>Please allow a few days for credit to be posted to your account.</p><p>A copy of your data should be automatically saved to your computer. Please keep this file for your records.</p><p>You can close this window now.</p>');
+
+                    //Save data locally as csv. Source: https://github.com/mholt/PapaParse/issues/175
+                    var blob = new Blob([ConvertToCSV(trialData)]);
+                    if (window.navigator.msSaveOrOpenBlob)  // IE hack; see http://msdn.microsoft.com/en-us/library/ie/hh779016.aspx
+                        window.navigator.msSaveBlob(blob, "data_ALL.csv");
+                    else
+                    {
+                        var a = window.document.createElement("a");
+                        a.href = window.URL.createObjectURL(blob, {type: "text/plain"});
+                        a.download = "data_ALL.csv";
+                        document.body.appendChild(a);
+                        a.click();  // IE: "Access is denied"; see: https://connect.microsoft.com/IE/feedback/details/797361/ie-10-treats-blob-url-as-cross-origin-and-denies-access
+                        document.body.removeChild(a);
+                    }
                 }
-                }
-        }
-        
-        timeline_full.push(final_end_screen);
-        
-        
-        jsPsych.init({
-            preload_audio: [headphone_check[0],lanna_stuff,sin_stuff[0],shape_stuff[0],mandarin_stuff[0]], // preload audio for faster execution
-            preload_images: [tonescramble_stuff[1],shape_stuff[1],mandarin_stuff[1]],
-            timeline: timeline_full
-        });
-  
-    </script>
+            }        
+            timeline_full.push(final_end_screen);        
+
+            jsPsych.init({
+                preload_audio: [items_to_preload[0],headphone_check[0]], // preload audio for faster execution
+                preload_images: [items_to_preload[1],'img/next.png','img/repeat.png'],
+                timeline: timeline_full,
+                show_progress_bar: true
+            });
+
+        </script>
     </body>
 </html>
