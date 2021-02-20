@@ -201,7 +201,7 @@ var stim = [
                 play_word.prompt = ("<div class='trialtext'>Listen to the voice who says 'BARON'</div>");
             },
             on_finish: function (data){
-                if (jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press)=='q'){ // option to skip for testing purposes
+                if (inits=='debug' && jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press)=='q'){ // option to skip for testing purposes
                     //NaN because no answer provided on this trial
                     userAns = NaN;
                         
@@ -223,16 +223,23 @@ var stim = [
                 userAns= Number(get_response.button_pressed);
                 if(corr_ans==userAns) numCorrect++;
                 trialData = trialData.concat({
+                    subj_inits: inits,
+                    subj_email: email,
+                    lang: lang,
+                    lang_other: lang_other,
+                    years_train: years_train,
+                    device_samp_hz: fs,
+                    headphoneCheck: calibrateScore,
                     taskCounter: taskCounter,
                     taskID: taskID,
-                    block: currBlock,
-                    voice_set: block_order[currBlock],
                     trialNum: currTrial+1,
-                    stim: curr_stim,
-                    stim_index: isExample? NaN: stim[block_order[currBlock]][stim_order[block_order[currBlock]][currTrial]]["idx"],
-                    answer: corr_ans,
+                    trial_type: corr_ans,
                     response: userAns,
-                    isExample: isExample
+                    stimSet0: curr_stim,
+                    stimSet1: isExample? NaN: stim[block_order[currBlock]][stim_order[block_order[currBlock]][currTrial]]["idx"], // index number from excel sheet,
+                    stimSet2: block_order[currBlock], // which voice set (0 or 1)
+                    stimSet3: NaN,
+                    stimSet4: NaN
                 });                 
                  currTrial++;
             }

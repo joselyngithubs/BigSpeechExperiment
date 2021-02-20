@@ -46,13 +46,23 @@ function run_goldmsi(timeline,taskCounter,taskID){
                         let tmp_score = pq_idx[i]==0? (p_resp[pq[i]]*-1+7):(p_resp[pq[i]]+1);
                         
                         trialData = trialData.concat({
+                            subj_inits: inits,
+                            subj_email: email,
+                            lang: lang,
+                            lang_other: lang_other,
+                            years_train: years_train,
+                            device_samp_hz: fs,
+                            headphoneCheck: calibrateScore,
                             taskCounter: taskCounter,
                             taskID: taskID,
-                            subscale: 'perceptual',
-                            q: pq[i],
-                            index: pq_idx[i],
-                            resp: p_resp[pq[i]],
-                            val: tmp_score
+                            trialNum: NaN,
+                            trial_type: pq_idx[i], // index
+                            response: p_resp[pq[i]],
+                            stimSet0: pq[i], // q
+                            stimSet1: 'perceptual', // subscale
+                            stimSet2: tmp_score, //val
+                            stimSet3: NaN,
+                            stimSet4: NaN
                         });
                         
                         p_score = p_score + tmp_score;                    
@@ -60,13 +70,23 @@ function run_goldmsi(timeline,taskCounter,taskID){
                     
                     // store total p score
                     trialData = trialData.concat({
+                        subj_inits: inits,
+                        subj_email: email,
+                        lang: lang,
+                        lang_other: lang_other,
+                        years_train: years_train,
+                        device_samp_hz: fs,
+                        headphoneCheck: calibrateScore,
                         taskCounter: taskCounter,
                         taskID: taskID,
-                        subscale: 'perceptual',
-                        q: NaN,
-                        index: NaN,
-                        resp: NaN,
-                        val: p_score                   
+                        trialNum: NaN,
+                        trial_type: NaN,
+                        response: NaN,
+                        stimSet0: NaN,
+                        stimSet1: 'perceptual', // subscale
+                        stimSet2: p_score, //val
+                        stimSet3: NaN,
+                        stimSet4: NaN
                     });
                 }
             };
@@ -92,13 +112,23 @@ function run_goldmsi(timeline,taskCounter,taskID){
                         let tmp_score = tq_idx[i]==0? (t_resp[tq[i]]*-1+7):(t_resp[tq[i]]+1);
                         
                         trialData = trialData.concat({
+                            subj_inits: inits,
+                            subj_email: email,
+                            lang: lang,
+                            lang_other: lang_other,
+                            years_train: years_train,
+                            device_samp_hz: fs,
+                            headphoneCheck: calibrateScore,
                             taskCounter: taskCounter,
                             taskID: taskID,
-                            subscale: 'training',
-                            q: tq[i],
-                            index: tq_idx[i],
-                            resp: t_resp[tq[i]],
-                            val: tmp_score
+                            trialNum: NaN,
+                            trial_type: tq_idx[i],
+                            response: t_resp[tq[i]],
+                            stimSet0: tq[i],
+                            stimSet1: 'training',
+                            stimSet2: tmp_score, //val
+                            stimSet3: NaN,
+                            stimSet4: NaN
                         });
                         
                         t_score = t_score + tmp_score;                    
@@ -106,13 +136,23 @@ function run_goldmsi(timeline,taskCounter,taskID){
                     
                     // store total p score
                     trialData = trialData.concat({
+                        subj_inits: inits,
+                        subj_email: email,
+                        lang: lang,
+                        lang_other: lang_other,
+                        years_train: years_train,
+                        device_samp_hz: fs,
+                        headphoneCheck: calibrateScore,
                         taskCounter: taskCounter,
                         taskID: taskID,
-                        subscale: 'training',
-                        q: NaN,
-                        index: NaN,
-                        resp: NaN,
-                        val: t_score                   
+                        trialNum: NaN,
+                        trial_type: NaN,
+                        response: NaN,
+                        stimSet0: NaN,
+                        stimSet1: 'training',
+                        stimSet2: t_score, //val
+                        stimSet3: NaN,
+                        stimSet4: NaN
                     });
                 }
             };
@@ -150,13 +190,23 @@ function run_goldmsi(timeline,taskCounter,taskID){
                         let tmp_score = sq_idx[i]==0? (s_resp[sq[i]]*-1+7):(s_resp[sq[i]]+1);
                         
                         trialData = trialData.concat({
+                            subj_inits: inits,
+                            subj_email: email,
+                            lang: lang,
+                            lang_other: lang_other,
+                            years_train: years_train,
+                            device_samp_hz: fs,
+                            headphoneCheck: calibrateScore,
                             taskCounter: taskCounter,
                             taskID: taskID,
-                            subscale: 'sophistication',
-                            q: sq[i],
-                            index: sq_idx[i],
-                            resp: s_resp[sq[i]],
-                            val: tmp_score
+                            trialNum: NaN,
+                            trial_type: sq_idx[i],
+                            response: s_resp[sq[i]],
+                            stimSet0: sq[i],
+                            stimSet1: 'sophistication',
+                            stimSet2: tmp_score, //val
+                            stimSet3: NaN,
+                            stimSet4: NaN
                         });
                         
                         s_score = s_score + tmp_score;                    
@@ -164,13 +214,23 @@ function run_goldmsi(timeline,taskCounter,taskID){
                     
                     // store total p score
                     trialData = trialData.concat({
+                        subj_inits: inits,
+                        subj_email: email,
+                        lang: lang,
+                        lang_other: lang_other,
+                        years_train: years_train,
+                        device_samp_hz: fs,
+                        headphoneCheck: calibrateScore,
                         taskCounter: taskCounter,
                         taskID: taskID,
-                        subscale: 'sophistication',
-                        q: NaN,
-                        index: NaN,
-                        resp: NaN,
-                        val: s_score                   
+                        trialNum: NaN,
+                        trial_type: NaN,
+                        response: NaN,
+                        stimSet0: NaN,
+                        stimSet1: 'sophistication',
+                        stimSet2: s_score, // val
+                        stimSet3: NaN,
+                        stimSet4: NaN
                     });
                 }
             };

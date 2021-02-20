@@ -2,29 +2,23 @@ function run_pitchdiff_exp(timeline,taskCounter,taskID){
     
 // PD Gap 0.5
 
-    var rove;               // for PD tasks -- 1==rove the 1st tone, 0==fixed tone
-    var gap_dur;            // for PD tasks -- duration between tones
-    var txt_cnd;            // for PD tasks -- text stating the task
-    var example_prompt;     // text for examples
-    var trial_prompt;       // text for trials
-    var trials_type;        // trial condition (PD -- 0==higher,1==lower,2==same)
-    var trial_choices;      //  buttons to click on each trial
-    var ntrials;            // Number of trials total per task
-
+    var rove = 1;               // 1==rove the 1st tone, 0==fixed tone
+    var gap_dur = 0.5;          // duration between tones
+    var ntrials = 100;          // Number of trials total
+    var trials_type = jsPsych.randomization.repeat([0,1],ntrials/2);
+    // trial condition (0==higher,1==lower)
 
     //Other global variables    
-    var cur_trial = 0;          //Track current trial
+    var cur_trial = 0;          // Track current trial
     var nExample = 0;           // counter to keep track of num examples played
-    var demoNoteDiff = [3,9];   // for PD tasks -- diff's for the examples
-    var cur_type = NaN;         //Track current stim type (easier than constantly indexing trials_type)
-    var last_correct = false;   //Track correctness of latest response
-    var total_correct = 0;      //Track total number of correct responses
-    var trial_obj;              //Track the parameters of the latest stimulus
+    var demoNoteDiff = [3,9];   // diff's for the examples
+    var cur_type = NaN;         // Track current stim type (easier than constantly indexing trials_type)
+    var last_correct = false;   // Track correctness of latest response
+    var total_correct = 0;      // Track total number of correct responses
+    var trial_obj;              // Track the parameters of the latest stimulus
     var corr_ans;
 
-    // PD tasks -- setting the pitch diff
     var diff = 7; // current trial diff
-
     var diff1 = 1; // starting diff for staircase 1
     var diff2 = 7; // starting diff for staircase 2
     var maxDiff = 12; // 1 octave
@@ -50,21 +44,8 @@ function run_pitchdiff_exp(timeline,taskCounter,taskID){
         type: 'html-button-response',
         stimulus: '',
         post_trial_gap: 600,
-        on_start: function(start_screen){     
-            ntrials = 100; // for PD tasks
-
-            // PD gap 0.5 task
-            rove = 1;
-            gap_dur = 0.5;
-            txt_cnd = 'HIGHER or LOWER';
-            example_prompt = ['<p>Here is an example of a <b>HIGHER</b> pitched second tone.</p>','<p>Here is an example of a <b>LOWER</b> pitched second tone.</p>'];
-            trial_prompt = "<p>Was the 2nd pitch HIGHER or LOWER than the 1st pitch?</p>";
-            trial_choices = ['Higher','Lower'];
-
-            start_screen.stimulus = ('<div class="instruc"><p>Task ').concat(taskCounter).concat(' of 7</p><p>Welcome to the Pitch Difference Task.</p><p>In this task, you will listen to tones and judge if they are <b>').concat(txt_cnd).concat(' </b>in pitch from each other.</p><p>Please put on your headphones and click <b>NEXT</b> to listen to some examples of these stimuli.</p></div>');
-
-            //trials_type = higher or lower. 0 for higher, 1 for lower
-            trials_type = jsPsych.randomization.repeat([0,1],ntrials/2);
+        on_start: function(start_screen){
+            start_screen.stimulus = ('<div class="instruc"><p>Task ').concat(taskCounter).concat(' of 7</p><p>Welcome to the Pitch Difference Task.</p><p>In this task, you will listen to tones and judge if they are <b>HIGHER or LOWER</b> in pitch from each other.</p><p>Please put on your headphones and click <b>NEXT</b> to listen to some examples of these stimuli.</p></div>');
         },
         choices: ['img/next.png'],
         button_html: '<img src="%choice%" class="navbutton"/>'
@@ -72,14 +53,12 @@ function run_pitchdiff_exp(timeline,taskCounter,taskID){
 
     var example1 = {
         type: 'html-button-response',
-        stimulus: '',
+        stimulus: '<p>Here is an example of a <b>HIGHER</b> pitched second tone.</p>',
         choices: ['img/next.png'],
         button_html: '<img src="%choice%" class="navbutton"/>',
         post_trial_gap: 300,
         prompt: "<p>Click <b>NEXT</b> to continue.</p>",
         on_start: function(example1){
-            example1.stimulus = example_prompt[0];
-
             //play_tones(rove, diff, high_low_same, gap_dur)
             play_tones(rove,demoNoteDiff[nExample],0,gap_dur);
         }
@@ -87,16 +66,13 @@ function run_pitchdiff_exp(timeline,taskCounter,taskID){
 
     var example2 = {
         type: 'html-button-response',
-        stimulus: '',
+        stimulus: '<p>Here is an example of a <b>LOWER</b> pitched second tone.</p>',
         choices: ['img/next.png'],
         button_html: '<img src="%choice%" class="navbutton"/>',
         post_trial_gap: 300,
         prompt: "<p>Click <b>NEXT</b> to continue.</p>",
         on_start: function(example2){
-            example2.stimulus = example_prompt[1];
-
             play_tones(rove,demoNoteDiff[nExample],1,gap_dur);
-            
             nExample++;
         }
     }
@@ -112,11 +88,8 @@ function run_pitchdiff_exp(timeline,taskCounter,taskID){
     // Final screen before beginning the experiment; reminds instructions
     var example_wrap = {
         type: 'html-button-response',
-        stimulus: '',
+        stimulus: '<div class="instruc"><p><b>READY?</b></p><p>To recap, you will listen to 100 pairs of tones. You will be asked if the 2 tones are <b>HIGHER or LOWER</b> in pitch.</p><p>You will receive feedback for each response. You will have an opportunity to take a break halfway through.</p><p>Please put your headphones on now before beginning and try your best!</p><p>Click <b>NEXT</b> to begin.</p></div>',
         post_trial_gap: 600,
-        on_start: function(example_wrap){
-            example_wrap.stimulus = ('<div class="instruc"><p><b>READY?</b></p><p>To recap, you will listen to 100 pairs of tones. You will be asked if the 2 tones are <b>').concat(txt_cnd).concat(' </b>in pitch.</p><p>You will receive feedback for each response. You will have an opportunity to take a break halfway through.</p><p>Please put your headphones on now before beginning and try your best!</p><p>Click <b>NEXT</b> to begin.</p></div>');
-        },
         choices: ['img/next.png'],
         button_html: '<img src="%choice%" class="navbutton"/>' 
     }
@@ -162,13 +135,10 @@ function run_pitchdiff_exp(timeline,taskCounter,taskID){
     var trial = {
         type: "html-button-response",
         stimulus: "",
-        choices: [],
+        choices: ['Higher','Lower'],
         on_start: function(trial) {
             //Set up text for this trial
-            let tag = trial_prompt;
-            trial.stimulus = ("<p><b>Trial ").concat([cur_trial+1].toString()).concat(" of ").concat(ntrials.toString()).concat("</b></p>").concat(tag);
-
-            trial.choices = trial_choices;                    
+            trial.stimulus = ("<p><b>Trial ").concat([cur_trial+1].toString()).concat(" of ").concat(ntrials.toString()).concat("</b></p><p>Was the 2nd pitch HIGHER or LOWER than the 1st pitch?</p>");                  
         },
         on_finish: function(data) {
             //Check correctness to provide feedback
@@ -182,8 +152,6 @@ function run_pitchdiff_exp(timeline,taskCounter,taskID){
                 total_correct++;
 
                 // tally a correct response for the staircase if applicable    
-
-
                         if(staircase[cur_trial] == 0){ // staircase 0
                             staircase_track0++;
                             if(cur_trial>3 && staircase_track0 > 2){
@@ -212,7 +180,6 @@ function run_pitchdiff_exp(timeline,taskCounter,taskID){
                 last_correct = false;
 
                 // reset the staircase if incorrect response, if applicable
-
                 if(staircase[cur_trial] == 0){
                     staircase_track0 = 0;
                     diff1 = diff/0.9;
@@ -228,19 +195,23 @@ function run_pitchdiff_exp(timeline,taskCounter,taskID){
 
             //Append the trial parameters and results to the data array
             trialData = trialData.concat({
+                subj_inits: inits,
+                subj_email: email,
+                lang: lang,
+                lang_other: lang_other,
+                years_train: years_train,
+                device_samp_hz: fs,
+                headphoneCheck: calibrateScore,
                 taskCounter: taskCounter,
                 taskID: taskID,
-                cur_trial: cur_trial+1,
+                trialNum: cur_trial+1,
                 trial_type: cur_type,//higher, lower, or same
-                freq1: trial_obj.freq1,
-                freq2: trial_obj.freq2,
                 response: trial_resp,
-                correct: trial_resp == corr_ans,
-                // save staircase info for PD tasks
-                staircase: staircase[cur_trial],
-                staircase_track0: staircase[cur_trial]==0? staircase_track0:NaN,
-                staircase_track1: staircase[cur_trial]==0? NaN:staircase_track1,
-                diff: diff
+                stimSet0: trial_obj.freq1,
+                stimSet1: trial_obj.freq2,
+                stimSet2: NaN,
+                stimSet3: NaN,
+                stimSet4: NaN
             });
         }
     }
@@ -280,10 +251,7 @@ function run_pitchdiff_exp(timeline,taskCounter,taskID){
 
     var break_screen = {
         type: "html-button-response",
-        stimulus: '',
-        on_start: function(break_screen){
-            break_screen.stimulus = ("<p>You are halfway through this task!</p><p>You can take a break, but do NOT refresh the page or use your browser's forward/back buttons, or you will lose your progress.</p><p>Click <b>NEXT</b> to resume the experiment.</p><p>To recap:<br>In this task, you are judging if tones are<b> ").concat(txt_cnd).concat(' </b>in pitch.</p>');          
-        },
+        stimulus: "<p>You are halfway through this task!</p><p>You can take a break, but do NOT refresh the page or use your browser's forward/back buttons, or you will lose your progress.</p><p>Click <b>NEXT</b> to resume the experiment.</p><p>To recap:<br>In this task, you are judging if tones are <b>HIGHER or LOWER</b> in pitch.</p>",
         choices: ['img/next.png'],
         button_html: '<img src="%choice%" class="navbutton"/>'
     }    

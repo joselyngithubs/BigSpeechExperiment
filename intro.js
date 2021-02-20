@@ -4,14 +4,15 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 function intro(timeline,taskCounter,taskID){
-            
+    /*        
     var email;                // Save subject email
-    //var inits;                // Save subject initials
+    var inits;                // Save subject initials
     var lang;                 // Save subject's primary language
     var lang_other = "NA";    // Save subject's language (if not listed in first question)
     var years_train;          // Save subject's years of formal musical training
     var fname;                // Specifies filename for the participant's data
-
+    */
+    
     // Function to check participant consent
     var check_consent = function(elem) {
       if (document.getElementById("consent_checkbox").checked & document.getElementById("headphones_checkbox").checked & document.getElementById("googlechrome").checked) {
@@ -135,16 +136,6 @@ function intro(timeline,taskCounter,taskID){
       post_trial_gap: 600,
       on_finish: function(data) {
         years_train = JSON.parse(data.responses)["years_train"];
-        trialData = trialData.concat({
-            taskCounter: taskCounter,
-            taskID: taskID,
-            subj_inits: inits,
-            subj_email: email,
-            lang: lang,
-            lang_other: lang_other,
-            years_train: years_train,
-            device_samp_hz: fs
-        });
       }
     }
     timeline.push(collect_years);

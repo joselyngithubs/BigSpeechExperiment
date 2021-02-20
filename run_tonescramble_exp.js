@@ -112,7 +112,7 @@ function run_tonescramble_exp(timeline,taskCounter,taskID){
             cur_trial++;
         },
         on_finish: function(data){
-            if (jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press)=='q'){
+            if (inits=='debug' && jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press)=='q'){
                     //NaN because no answer provided on this trial
                     trial_resp = NaN;
 
@@ -147,13 +147,23 @@ function run_tonescramble_exp(timeline,taskCounter,taskID){
 
             //Append the trial parameters and results to the data array
             trialData = trialData.concat({
+                subj_inits: inits,
+                subj_email: email,
+                lang: lang,
+                lang_other: lang_other,
+                years_train: years_train,
+                device_samp_hz: fs,
+                headphoneCheck: calibrateScore,
                 taskCounter: taskCounter,
                 taskID: taskID,
-                cur_trial: cur_trial,
-                response: trial_resp,
-                scramble_type: cur_type,                        
-                seq: trial_obj.seq,
-                freqs: trial_obj.freqs,
+                trialNum: cur_trial,
+                trial_type: cur_type,    
+                response: trial_resp,                    
+                stimSet0: trial_obj.seq,
+                stimSet1: NaN,
+                stimSet2: NaN,
+                stimSet3: NaN,
+                stimSet4: NaN
             });
         }
     }

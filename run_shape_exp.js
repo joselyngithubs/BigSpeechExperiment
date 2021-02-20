@@ -270,7 +270,7 @@ function run_shape_exp(timeline,taskCounter,taskID){
                 play_word.stimulus = audioFile;
             },
             on_finish: function(data){
-                if (jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press)=='q'){ // option to skip for testing purposes
+                if (inits=='debug' && jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press)=='q'){ // option to skip for testing purposes
                     //NaN because no answer provided on this trial
                     userAns = NaN;
                     
@@ -348,18 +348,23 @@ function run_shape_exp(timeline,taskCounter,taskID){
                  
                  // save data
                  trialData = trialData.concat({
+                     subj_inits: inits,
+                     subj_email: email,
+                     lang: lang,
+                     lang_other: lang_other,
+                     years_train: years_train,
+                     device_samp_hz: fs,
+                     headphoneCheck: calibrateScore,
                      taskCounter: taskCounter,
                      taskID: taskID,
                      trialNum: currTrial+1,
-                     condition: condition,
+                     trial_type: corrAns, // position of the correct answer
+                     response: userAns,
                      stimSet0: currStim[0],
                      stimSet1: currStim[1],
                      stimSet2: currStim[2],
-                     word: audioFile,
-                     correctAnswer: corrAns,
-                     response: userAns,
-                     correct: corrAns==userAns,
-                     num_repeat: num_repeat
+                     stimSet3: condition, // type A,B,C
+                     stimSet4: num_repeat // number of times the listener repeated the stim
                 });
                  
                  currTrial++;

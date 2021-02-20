@@ -14,7 +14,7 @@ function run_headphone_check(timeline,taskCounter,taskID){
     var calibrateAns = [3,2,3,2,1,1];            
     var calibrateOrder = jsPsych.randomization.repeat([0,1,2,3,4,5],1);            
     var calibrateCurrTrial = 0;
-    var calibrateScore = 0;
+    //var calibrateScore = 0;
 
     var calibrate1 = {
         type: 'html-button-response',
@@ -86,14 +86,7 @@ function run_headphone_check(timeline,taskCounter,taskID){
     var calibrateFinish = {
         type: "html-button-response",
         stimulus: '<p>Calibration complete. Press <b>Continue</b> to move on.</p>',
-        choices: ['Continue'],
-        on_start: function(){
-            trialData = trialData.concat({
-                taskCounter: taskCounter,
-                taskID: taskID,
-                headphoneCheck: calibrateScore
-            })
-        }
+        choices: ['Continue']
     }            
     timeline.push(calibrateFinish);
     

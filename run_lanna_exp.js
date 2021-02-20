@@ -91,7 +91,7 @@ function run_lanna_exp(timeline,taskCounter,taskID){
                 play_word.prompt = ("<div class='trialtext'><b>Trial ").concat((currTrial+1).toString()).concat(" of ").concat(nTrials.toString()).concat("</div>");
             },
             on_finish: function (data){
-                if (jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press)=='q'){ // option to skip for testing purposes
+                if (inits=='debug' && jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press)=='q'){ // option to skip for testing purposes
                     //NaN because no answer provided on this trial
                     userAns = NaN;
                         
@@ -134,13 +134,23 @@ function run_lanna_exp(timeline,taskCounter,taskID){
                  
                  // save data
                  trialData = trialData.concat({
+                     subj_inits: inits,
+                     subj_email: email,
+                     lang: lang,
+                     lang_other: lang_other,
+                     years_train: years_train,
+                     device_samp_hz: fs,
+                     headphoneCheck: calibrateScore,
                      taskCounter: taskCounter,
                      taskID: taskID,
                      trialNum: currTrial+1,
-                     stim: order[currBlock][currTrial],
-                     correctAnswer: corrAns,
+                     trial_type: corrAns,
                      response: Number(userAns) + 1,
-                     correct: corrAns==(Number(userAns)+1)
+                     stimSet0: order[currBlock][currTrial],
+                     stimSet1: NaN,
+                     stimSet2: NaN,
+                     stimSet3: NaN,
+                     stimSet4: NaN
                 });
                  
                  currTrial++;
