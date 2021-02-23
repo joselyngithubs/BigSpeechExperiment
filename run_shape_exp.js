@@ -389,6 +389,8 @@ function run_shape_exp(timeline,taskCounter,taskID){
                 let p_corr = numCorrect / currTrial;
                 
                 end_screen.stimulus = ('<p>You have finished this task. Yay!</p><p>Percent correct = ').concat(Math.round(p_corr *100).toString()).concat('%</p><p>You have<b> ').concat(7-taskCounter).concat(' </b>tasks remaining.</p><p>Click <b>NEXT</b> to continue.</p>');
+                
+                saveMyData(trialData);
             }
         }
         timeline.push(start_screen,example_loop,example_wrap,trial,end_screen);

@@ -110,6 +110,9 @@
         <script src="lib/jsPsych-master/plugins/jspsych-external-html.js"></script>
         <script src="lib/jsPsych-master/plugins/jspsych-survey-multi-choice.js"></script>
         <script src="lib/jsPsych-master/plugins/jspsych-survey-text.js"></script>    
+        
+        <script src="lib/saveMyData.js"></script>
+        
         <script src="intro.js"></script>
         <script src="run_headphone_check.js"></script>
         <script src="run_lanna_exp.js"></script>
@@ -118,8 +121,37 @@
         <script src="run_pitchdiff_exp.js"></script>
         <script src="run_sin_exp.js"></script>
         <script src="run_tonescramble_exp.js"></script>
-        <script src="run_goldmsi.js"></script>         
+        <script src="run_goldmsi.js"></script>    
+        <!-- PapaParse functions -->
+        <script src="lib/PapaParse/papaparse.js"></script>
 
+        <!-- The core Firebase JS SDK is always required and must be listed first -->
+        <script src="https://www.gstatic.com/firebasejs/8.2.8/firebase-app.js"></script>
+
+        <!-- Include only the Firebase features as you need -->
+        <script src="https://www.gstatic.com/firebasejs/8.2.8/firebase-analytics.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.2.8/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.2.8/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.2.8/firebase-storage.js"></script>
+
+        <script>
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+            const firebaseConfig = {
+                apiKey: "AIzaSyABP_fcymo7OI1an11k-DQD36wLaH1LAVU",
+                authDomain: "bigspeechexperiment.firebaseapp.com",
+                databaseURL: "https://bigspeechexperiment.firebaseio.com",
+                projectId: "bigspeechexperiment",
+                storageBucket: "bigspeechexperiment.appspot.com",
+                messagingSenderId: "1029118314316",
+                appId: "1:1029118314316:web:a484951413de314ab671e9",
+                measurementId: "G-YXTZHNF3WX"
+            };
+            
+            firebase.initializeApp(firebaseConfig);
+            
+        </script>
+        
         <script>
             // Initialize the audio context
             function init() {
@@ -178,7 +210,7 @@
 
             // Run GoldMSI survey (last)
             myTasks[7]['task'](timeline_full,taskCounter++,7);
-
+            
             var final_end_screen = {
                 type: 'html-keyboard-response',
                 stimulus: '',

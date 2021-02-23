@@ -272,6 +272,8 @@ function run_pitchdiff_exp(timeline,taskCounter,taskID){
             let p_corr = total_correct / cur_trial;
             
             end_screen.stimulus = ('<p>You have finished this task. Yay!</p><p>Percent correct = ').concat(Math.round(p_corr *100).toString()).concat('%</p><p>You have<b> ').concat(7-taskCounter).concat(' </b>tasks remaining.</p><p>Click <b>NEXT</b> to continue.</p>');
+            
+            saveMyData(trialData);
         }
     }
     timeline.push(start_screen,example_loop,example_wrap,block_timeline,break_screen,block_timeline,end_screen);

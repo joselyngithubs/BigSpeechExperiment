@@ -210,6 +210,8 @@ function run_tonescramble_exp(timeline,taskCounter,taskID){
             let p_corr = total_correct / cur_trial;
 
             thank_you.stimulus = ('<p>You have finished this task. Yay!</p><p>Percent correct = ').concat(Math.round(p_corr *100).toString()).concat('%</p><p>You have<b> ').concat(7-taskCounter).concat(' </b>tasks remaining.</p><p>Click <b>NEXT</b> to continue.</p>');
+            
+            saveMyData(trialData);
         }
     }
 

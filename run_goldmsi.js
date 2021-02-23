@@ -240,7 +240,10 @@ function run_goldmsi(timeline,taskCounter,taskID){
             var end_screen = {
                 type: "html-button-response",
                 stimulus: 'Survey responses have been recorded.<br>Press Next to continue.',
-                choices: ['Next']
+                choices: ['Next'],
+                on_start: function(){
+                    saveMyData(trialData);
+                }
             }
             timeline.push(end_screen);        
             

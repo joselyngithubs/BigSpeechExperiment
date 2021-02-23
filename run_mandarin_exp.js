@@ -241,8 +241,9 @@ function run_mandarin_exp(timeline,taskCounter,taskID){
             button_html: '<img src="%choice%" class="navbutton"/>',
             on_start: function(end_screen) {
                 
-               end_screen.stimulus = ('<p>You have finished this task. Yay!</p><p>Percent correct = ').concat(((numCorrect/currTrial)*100).toFixed(2)).concat('%</p><p>You have<b> ').concat(7-taskCounter).concat(' </b>tasks remaining.</p><p>Click <b>NEXT</b> to continue.</p>');
+                end_screen.stimulus = ('<p>You have finished this task. Yay!</p><p>Percent correct = ').concat(((numCorrect/currTrial)*100).toFixed(2)).concat('%</p><p>You have<b> ').concat(7-taskCounter).concat(' </b>tasks remaining.</p><p>Click <b>NEXT</b> to continue.</p>');
                 
+                saveMyData(trialData);
                 }
         }
         timeline.push(end_screen);
