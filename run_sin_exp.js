@@ -148,7 +148,7 @@ var stim = [
         var calibrate1 = {
             type: 'html-button-response',
             stimulus: '',
-            prompt: '<div class="instruc"><p>Before we begin, let\'s calibrate again.</p><p>Put on your headphones and turn your computer\'s volume down. Then, press "calibrate" and increase your volume until the calibration tone is at a comfortable level.</p><p>Play the calibration sound as many times as you like. Press <b>Continue</b> when you are finished calibrating.</p></div>',
+            prompt: '<div class="instruc"><p>Before we begin, let\'s calibrate again.</p><p>Put on your headphones and turn your computer\'s volume DOWN. Then, press "calibrate" and increase your volume until the calibration tone is at a comfortable level.</p><p>Play the calibration sound as many times as you like. Press <b>Continue</b> when you are finished calibrating.</p></div>',
             choices: ['Calibrate','Continue'],
             on_finish: function(calibrate1){
                     userAns= calibrate1.button_pressed;
@@ -157,7 +157,7 @@ var stim = [
         var calibrate2 = {
             type: 'audio-button-response',
             stimulus: '',
-            prompt: '<div class="instruc"><p>Before we begin, let\'s calibrate again.</p><p>Put on your headphones and press "calibrate" and adjust your computer\'s volume until the calibration tone is at a comfortable level.</p><p>Play the calibration sound as many times as you like. Press <b>Continue</b> when you are finished calibrating.</p></div>',
+            prompt: '<div class="instruc"><p>Before we begin, let\'s calibrate again.</p><p>Put on your headphones and turn your computer\'s volume DOWN. Then, press "calibrate" and increase your volume until the calibration tone is at a comfortable level.</p><p>Play the calibration sound as many times as you like. Press <b>Continue</b> when you are finished calibrating.</p></div>',
             choices: ['Calibrate','Continue'],
             on_start: function(calibrate2){
                     if(userAns==0){

@@ -5,7 +5,7 @@ function run_tonescramble_exp(timeline,taskCounter,taskID){
     var nblocks = 3;
 
     //Random ordering of major/minor across trials, across blocks 
-    var trials_type = jsPsych.randomization.repeat([1,2],ntrials/2);
+    var trials_type = jsPsych.randomization.repeat([1,2],ntrials/2); // divide by 2 because 2 types
 
     //Track current trial
     var cur_trial = 0;

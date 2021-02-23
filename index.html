@@ -81,7 +81,13 @@
             .feedbackcorrect{
                 border: 3px solid #00FF00;
             }
+            .feedbackcorrect:hover{
+                border: 3px solid #00FF00;
+            }
             .feedbackwrong{
+                border: 3px solid #FF0000;
+            }
+            .feedbackwrong:hover{
                 border: 3px solid #FF0000;
             }
         </style>
@@ -213,21 +219,19 @@
             
             var final_end_screen = {
                 type: 'html-keyboard-response',
-                stimulus: '',
+                stimulus: '<p>You have finished all tasks! Thank you for your participation.</p><p>Please allow a few days for credit to be posted to your account. If you have further questions, please contact the researcher of this experiment.</p><p>A copy of your data should be automatically saved to your computer. Please keep this file for your records.</p><p>You can close this window now.</p>',
                 choices: '',
                 on_start: function(end_screen) {
-
-                    end_screen.stimulus = ('<p>You have finished all tasks! Thank you for your participation.</p><p>Please allow a few days for credit to be posted to your account.</p><p>A copy of your data should be automatically saved to your computer. Please keep this file for your records.</p><p>You can close this window now.</p>');
 
                     //Save data locally as csv. Source: https://github.com/mholt/PapaParse/issues/175
                     var blob = new Blob([ConvertToCSV(trialData)]);
                     if (window.navigator.msSaveOrOpenBlob)  // IE hack; see http://msdn.microsoft.com/en-us/library/ie/hh779016.aspx
-                        window.navigator.msSaveBlob(blob, "data_ALL.csv");
+                        window.navigator.msSaveBlob(blob, fname.concat(".csv"));
                     else
                     {
                         var a = window.document.createElement("a");
                         a.href = window.URL.createObjectURL(blob, {type: "text/plain"});
-                        a.download = "data_ALL.csv";
+                        a.download = fname.concat(".csv");
                         document.body.appendChild(a);
                         a.click();  // IE: "Access is denied"; see: https://connect.microsoft.com/IE/feedback/details/797361/ie-10-treats-blob-url-as-cross-origin-and-denies-access
                         document.body.removeChild(a);

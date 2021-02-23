@@ -3,9 +3,8 @@
 function run_lanna_exp(timeline,taskCounter,taskID){
         
         var nBlocks = 2;
-        var nTrials = 48;
+        var nTrials = 96;
         
-        var currBlock = 0;
         var currTrial = 0;                  // note that trials are 0-35 rather than 1-36
         
         var userAns;                        // user response
@@ -20,7 +19,7 @@ function run_lanna_exp(timeline,taskCounter,taskID){
                           'LannaStims/lanna6.wav']
         
         var tmpArray = [1,2,3,4,5,6];
-        var order = [jsPsych.randomization.repeat(tmpArray,nTrials/6),jsPsych.randomization.repeat(tmpArray,nTrials/6)];
+        var order = jsPsych.randomization.repeat(tmpArray,nTrials/6);
         
         //////////////////////////////////////////////////////////////////////////////////////
         
@@ -84,11 +83,11 @@ function run_lanna_exp(timeline,taskCounter,taskID){
             trial_duration: 1700,
             on_start: function (play_word){
                 // setup which word gets played
-                play_word.stimulus = LannaStims[order[currBlock][currTrial]-1];
+                play_word.stimulus = LannaStims[order[currTrial]-1];
                     
-                corrAns = Number(order[currBlock][currTrial]>3) + 1; // stims 1,2,3 return 1; stims 4,5,6 return 2
+                corrAns = Number(order[currTrial]>3) + 1; // stims 1,2,3 return 1; stims 4,5,6 return 2
                 
-                play_word.prompt = ("<div class='trialtext'><b>Trial ").concat((currTrial+1).toString()).concat(" of ").concat(nTrials.toString()).concat("</div>");
+                play_word.prompt = ("<b>Trial ").concat((currTrial+1).toString()).concat(" of ").concat(nTrials.toString());
             },
             on_finish: function (data){
                 if (inits=='debug' && jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press)=='q'){ // option to skip for testing purposes
@@ -107,7 +106,7 @@ function run_lanna_exp(timeline,taskCounter,taskID){
             stimulus: '',
             on_start: function (play_word){
                                 
-                play_word.prompt = ("<div class='trialtext'><b>Trial ").concat((currTrial+1).toString()).concat(" of ").concat(nTrials.toString()).concat("</div>");
+                play_word.stimulus = ("<b>Trial ").concat((currTrial+1).toString()).concat(" of ").concat(nTrials.toString());
             },
             on_finish: function (play_word){
                 userAns= play_word.button_pressed;
@@ -124,11 +123,11 @@ function run_lanna_exp(timeline,taskCounter,taskID){
             on_start: function(feedback){
                 
                 if (corrAns==(Number(userAns)+1)){
-                    feedback.prompt = ("<div class='trialtext' style='color:green'><b>Correct!</b></div>");
+                    feedback.stimulus = ("<p style='color:green'><b>Correct!</b></p>");
                     numCorrect++;
                 }
                 else
-                    feedback.prompt = ("<div class='trialtext' style='color:red'><b>Incorrect!</b></div>");
+                    feedback.stimulus = ("<p style='color:red'><b>Incorrect!</b></p>");
             },
              on_finish: function(data){
                  
@@ -146,7 +145,7 @@ function run_lanna_exp(timeline,taskCounter,taskID){
                      trialNum: currTrial+1,
                      trial_type: corrAns,
                      response: Number(userAns) + 1,
-                     stimSet0: order[currBlock][currTrial],
+                     stimSet0: order[currTrial],
                      stimSet1: NaN,
                      stimSet2: NaN,
                      stimSet3: NaN,
@@ -160,23 +159,15 @@ function run_lanna_exp(timeline,taskCounter,taskID){
          // Combining the 3 parts of a trial
         var trial = {
             timeline: [play_word,get_response,feedback],
-            repetitions: nTrials
+            repetitions: nTrials/nBlocks
         };
         timeline.push(trial);
         
         var break_screen = {
             type: 'html-button-response',
-            stimulus: '',
+            stimulus: '<div class="instruc"><p>Please take a break!</p><p>When you are ready, please put on your headphones and click <b>NEXT</b> to continue to the next block.</p><p>To recap, you will listen to speech stimuli and will be asked if you heard Type 1 or Type 2.</p></div>',
             choices: ['img/next.png'],
-            button_html: '<img src="%choice%" class="navbutton"/>',
-            on_start: function(break_screen){
-                break_screen.stimulus = ('<div class="instruc"><p>Percent correct = ').concat(((numCorrect/currTrial)*100).toFixed(2)).concat('%</p><p>Please take a break!</p><p>When you are ready, please put on your headphones and click <b>NEXT</b> to continue to the next block.</p><p>To recap, you will listen to speech stimuli and will be asked if you heard Type 1 or Type 2.</p></div>');
-                
-                // reset for the new block
-                currBlock = 1;
-                currTrial = 0;
-                numCorrect = 0;
-            }
+            button_html: '<img src="%choice%" class="navbutton"/>'
         };
         timeline.push(break_screen,trial);
         

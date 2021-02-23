@@ -110,7 +110,7 @@ function run_mandarin_exp(timeline,taskCounter,taskID){
                    this.trial_duration = 1;
                    }
                 else{
-                    this.trial_duration = 500;
+                    this.trial_duration = 700;
                     this.stimulus = exampleStims[userAns];
                 }                
             }
