@@ -81,6 +81,27 @@ function run_headphone_check(timeline,taskCounter,taskID){
         repetitions: 6
     }
     timeline.push(calibrationSeq);
+    
+    // this screen appears if score below 5
+    var tryAgain = {
+        type: "html-button-response",
+        stimulus: '<p>Your score suggests that you are not wearing headphones. Please make sure that you are wearing headphones, and try again.</p>',
+        choices: ['Try again'],
+        on_finish: function(){
+            // reset
+            calibrateCurrTrial = 0;
+            calibrateScore = 0;
+        }
+    }
+    
+    var if_node = {
+        timeline: [tryAgain,calibrationSeq],
+        conditional_function: function(){
+            // retake the test (only once) if score <5. If they still get <5 the second time, then they move on.
+            return (calibrateScore<5);
+        }
+    }
+    timeline.push(if_node);
 
     //Final page
     var calibrateFinish = {
