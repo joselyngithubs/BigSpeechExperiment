@@ -116,6 +116,7 @@
         <script src="lib/jsPsych-master/plugins/jspsych-external-html.js"></script>
         <script src="lib/jsPsych-master/plugins/jspsych-survey-multi-choice.js"></script>
         <script src="lib/jsPsych-master/plugins/jspsych-survey-text.js"></script>    
+        <script src="lib/jsPsych-master/plugins/jspsych-survey-multi-select.js"></script>
         
         <script src="lib/saveMyData.js"></script>
         
@@ -195,6 +196,7 @@
             var lang_other = "NA";    // Save subject's language (if not listed in first question)
             var years_train;          // Save subject's years of formal musical training
             var fname;                // Specifies filename for the participant's data
+            var chinese = "NA";       // Save subject's familiarity with Cantonese/Mandarin
             intro(timeline_full,-1,-1);            
 
             // Run headphone check (first)

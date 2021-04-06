@@ -11,6 +11,7 @@ function intro(timeline,taskCounter,taskID){
     var lang_other = "NA";    // Save subject's language (if not listed in first question)
     var years_train;          // Save subject's years of formal musical training
     var fname;                // Specifies filename for the participant's data
+    var chinese = "NA";
     */
     
     // Function to check participant consent
@@ -123,6 +124,23 @@ function intro(timeline,taskCounter,taskID){
       }
     }
     timeline.push(if_node_collect_lang2);
+    
+    var ask_chinese = {
+        type: 'survey-multi-select',
+        questions: [
+            {
+            prompt: "Do you speak any of the following languages, either fluently or conversationally? If none of these apply, then click Continue to move on.", 
+            options: ["Chinese (Cantonese)","Chinese (Mandarin)"],
+            required: false,
+            name: 'chinese'
+            }
+        ],
+        on_finish: function(data) {
+            chinese = data.response["chinese"];
+            
+        }
+    }
+    timeline.push(ask_chinese);
 
     // Screen: collect years of formal musical training
     var collect_years = {

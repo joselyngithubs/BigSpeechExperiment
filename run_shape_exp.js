@@ -352,6 +352,7 @@ function run_shape_exp(timeline,taskCounter,taskID){
                      subj_email: email,
                      lang: lang,
                      lang_other: lang_other,
+                     chinese: chinese,
                      years_train: years_train,
                      device_samp_hz: fs,
                      headphoneCheck: calibrateScore,
