@@ -1,0 +1,350 @@
+<!-- Mandarin syllables discrimination task -->
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width">
+
+        <title>Mandarin Syllables Task</title>
+
+        <link href="lib/jsPsych-master/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+    
+        <style>
+            .instruc {
+                width: 50vw;
+            } /* formatting for instructions text */
+            
+            .trialtext {
+                width: 50vw;
+                position: fixed;
+                text-align: left;
+                left: 15vw;
+                top: 25vh;
+                font-size:20px;
+            } /* formatting for trial/feedback text */
+            
+            .nextbutton {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 150px;
+            }
+            .nextbutton:hover {
+                border: 1px solid #777;
+            } /* formatting of the next button */
+            
+            .exampleimg {
+                width: 30vw;
+                max-width: 30vh;
+                height: auto;
+            }
+            
+            .imgbutton{
+                width: 30vw;
+                max-width: 30vh;
+                height: auto;
+            }
+            
+            .imgbutton:hover {
+                border: 1px solid #777;
+            } /* formatting of the img button */
+            
+            .feedbackcorrect{
+                width: 30vw;
+                max-width: 30vh;
+                height: auto;
+                border: 3px solid #00FF00;
+            }
+            /* green border for correct answer */
+            
+            .feedbackwrong{
+                width: 30vw;
+                max-width: 30vh;
+                height: auto;
+                border: 3px solid #FF0000;
+            }
+            /* red border for incorrect */
+            
+            body {
+                background-color: #B0C4DE;
+            }
+            /* background color of the window */
+        </style>
+    </head>
+
+    <body>
+    <p>Preparing the experiment... This should only take a few seconds.</p>
+    
+    <!-- data mgmt, math helper, and sound generation functions -->
+    <script src="lib/data_mgmt.js" type="text/javascript"></script>
+    <script src="lib/math_helpers.js" type="text/javascript"></script>
+    <script src="lib/sound_functions.js" type="text/javascript"></script>
+
+    <!-- JsPsych functions -->
+    <script src="lib/jsPsych-master/jspsych.js"></script>
+    <script src="lib/jsPsych-master/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="lib/jsPsych-master/plugins/jspsych-audio-keyboard-response.js"></script>
+    <script src="lib/jsPsych-master/plugins/jspsych-audio-button-response.js"></script>
+    <script src="lib/jsPsych-master/plugins/jspsych-html-button-response.js"></script>
+
+    <script>               
+        var timeline = [];
+        
+        var nTrials = 40;
+        
+        //var currBlock = 0;
+        var currTrial = 0;                  // note that trials are 0-35 rather than 1-36
+        
+        var userAns;                        // user response
+        var numCorrect = 0;                 // keeps track of correct responses
+        
+        var trialData = [];                 // user data that gets saved to a csv later
+        
+        var buttonArray = ['class="imgbutton"/>','class="imgbutton"/>','class="imgbutton"/>','class="imgbutton"/>'];
+                                            // formatting for buttons in feedback screens
+        
+        var exampleStims = ['MandarinStims/examples/la1.mp3',
+                             'MandarinStims/examples/la2.mp3',
+                             'MandarinStims/examples/la3.mp3',
+                             'MandarinStims/examples/la4.mp3'];
+        
+        var MandarinStims = [
+            'MandarinStims/fen1.mp3','MandarinStims/fen2.mp3','MandarinStims/fen3.mp3','MandarinStims/fen4.mp3',
+            'MandarinStims/fu1.mp3','MandarinStims/fu2.mp3','MandarinStims/fu3.mp3','MandarinStims/fu4.mp3',
+            'MandarinStims/ma1.mp3','MandarinStims/ma2.mp3','MandarinStims/ma3.mp3','MandarinStims/ma4.mp3',
+            'MandarinStims/po1.mp3','MandarinStims/po2.mp3','MandarinStims/po3.mp3','MandarinStims/po4.mp3',
+            'MandarinStims/she1.mp3','MandarinStims/she2.mp3','MandarinStims/she3.mp3','MandarinStims/she4.mp3',
+            'MandarinStims/shi1.mp3','MandarinStims/shi2.mp3','MandarinStims/shi3.mp3','MandarinStims/shi4.mp3',
+            'MandarinStims/xie1.mp3','MandarinStims/xie2.mp3','MandarinStims/xie3.mp3','MandarinStims/xie4.mp3',
+            'MandarinStims/yi1.mp3','MandarinStims/yi2.mp3','MandarinStims/yi3.mp3','MandarinStims/yi4.mp3',
+            'MandarinStims/ying1.mp3','MandarinStims/ying2.mp3','MandarinStims/ying3.mp3','MandarinStims/ying4.mp3',
+            'MandarinStims/you1.mp3','MandarinStims/you2.mp3','MandarinStims/you3.mp3','MandarinStims/you4.mp3' 
+        ];
+        
+        var tone = [1,2,3,4,
+                        1,2,3,4,
+                       1,2,3,4,
+                       1,2,3,4,
+                       1,2,3,4,
+                       1,2,3,4,
+                       1,2,3,4,
+                       1,2,3,4,
+                       1,2,3,4,
+                       1,2,3,4];
+                
+        var order = [];        
+        for (var i=0;i<=39;i++) {
+            order.push(i);
+        } // create arrays of 0:39 (length 40)
+        
+        // shuffle array
+        order = jsPsych.randomization.repeat(order,1);
+        
+        var toneLabel = ['High-level, −','Low-rising, /','Low-dipping, ∨','High-falling, &#92;'];
+        
+        //////////////////////////////////////////////////////////////////////////////////////
+        
+        // Start Screen (instructions)
+        var start_screen = {
+            type: 'html-button-response',
+            stimulus: '<div class="instruc"><p><b>Welcome to the MANDARIN SYLLABLES TASK!</b></p><p>You will listen to Mandarin Chinese syllables and identify which tone they are spoken in.</p><p>There are 4 possible tones, which attribute different lexical meanings to a syllable.</p><p>Click <b>NEXT</b> to learn more about these tones.</p></div>',
+            choices: ['next.png'],
+            button_html: '<img src="%choice%" class="nextbutton"/>'
+        }
+        timeline.push(start_screen);
+        
+        var tone_summary = {
+            type: 'html-button-response',
+            stimulus: '<p style="text-align:left">The 4 tones are:<br><b>High-level, −:</b> begins at a high frequency and stays level<br><b>Low-rising, /:</b> begins at a low frequency and moves upward to a higher frequency<br><b>Low-dipping, ∨:</b> begins at a low frequency and dips before rising<br><b>High-falling, &#92;:</b> begins at a high frequency and moves downward to a lower frequency</p><p>Please put on your headphones and click <b>NEXT</b> to hear examples of these tones.</p>',
+            choices: ['next.png'],
+            button_html: '<img src="%choice%" class="nextbutton"/>'
+        }
+        timeline.push(tone_summary);
+        
+        // Example 1
+        var example1 = {
+            type: 'audio-button-response',
+            stimulus: '',
+            choices: ['next.png'],
+            button_html: '<img src="%choice%" class="nextbutton"/>',
+            on_start: function(example1){
+                example1.stimulus = exampleStims[0];
+                example1.prompt = ('<img src="MandarinStims/highlevel.png" class="exampleimg"/><br><b>High-level, −:</b> begins at a high frequency and stays level<p>Press <b>NEXT</b> to continue.</p>');                
+            }
+        }
+        
+        // Example 2
+        var example2 = {
+            type: 'audio-button-response',
+            stimulus: '',
+            choices: ['next.png'],
+            button_html: '<img src="%choice%" class="nextbutton"/>',
+            on_start: function(example2){
+                example2.stimulus = exampleStims[1];
+                example2.prompt = ('<img src="MandarinStims/lowrising.png" class="exampleimg"/><br><b>Low-rising, /:</b> begins at a low frequency and moves upward to a higher frequency<p>Press <b>NEXT</b> to continue.</p>');           
+            }
+        }
+        
+        // Example 3
+        var example3 = {
+            type: 'audio-button-response',
+            stimulus: '',
+            choices: ['next.png'],
+            button_html: '<img src="%choice%" class="nextbutton"/>',
+            on_start: function(example2){
+                example2.stimulus = exampleStims[2];
+                example2.prompt = ('<img src="MandarinStims/lowdipping.png" class="exampleimg"/><br><b>Low-dipping, ∨:</b> begins at a low frequency and dips before rising<p>Press <b>NEXT</b> to continue.</p>');           
+            }
+        }
+        
+        // Example 4
+        var example4 = {
+            type: 'audio-button-response',
+            stimulus: '',
+            choices: ['next.png'],
+            button_html: '<img src="%choice%" class="nextbutton"/>',
+            on_start: function(example2){
+                example2.stimulus = exampleStims[3];
+                example2.prompt = ('<img src="MandarinStims/highfalling.png" class="exampleimg"/><br><b>High-falling, &#92;:</b> begins at a high frequency and moves downward to a lower frequency<p>Press <b>NEXT</b> to continue.</p>');           
+            }
+        }
+        timeline.push(example1,example2,example3,example4);
+        
+        
+        var example_wrap = {
+            type: 'html-button-response',
+            stimulus: '<div class="instruc"><p><b>READY?</b></p><p>To recap, you will listen to 40 syllables and will be asked which of the 4 tone patterns you heard. You will receive feedback for each response.</p><p>Please put your headphones on now before beginning and try your best!</p><p>Click <b>NEXT</b> to begin.</p></div>',
+            choices: ['next.png'],
+            button_html: '<img src="%choice%" class="nextbutton"/>' 
+        }
+        timeline.push(example_wrap);
+        
+        //EXPERIMENTAL TASK
+        var currTrial = 0;
+        var play_word = {
+            type: 'audio-keyboard-response',
+            choices: 'q',
+            stimulus: '',
+            trial_duration: 1100,
+            on_start: function (play_word){
+                // setup which word gets played
+                play_word.stimulus = MandarinStims[order[currTrial]];
+                play_word.prompt = ("<div class='trialtext'><b>Trial ").concat((currTrial+1).toString()).concat(" of ").concat(nTrials.toString()).concat(": Which tone did you hear?</div>");
+            },
+            on_finish: function (data){
+                if (jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press)=='q'){ // option to skip for testing purposes
+                    //NaN because no answer provided on this trial
+                    userAns = NaN;
+                        
+                    //Skip the current timeline (i.e., go to next level)
+                    jsPsych.endCurrentTimeline();
+                }
+            }
+        }
+        
+        var get_response = {
+            type: 'html-button-response',
+            choices: ['MandarinStims/highlevel.png','MandarinStims/lowrising.png','MandarinStims/lowdipping.png', 'MandarinStims/highfalling.png'],
+            stimulus: '',
+            button_html: ['<img src="%choice%" class="imgbutton"/>','<img src="%choice%" class="imgbutton"/>','<img src="%choice%" class="imgbutton"/>','<img src="%choice%" class="imgbutton"/>'],
+            on_start: function (play_word){
+                            
+                play_word.prompt = ("<div class='trialtext'><b>Trial ").concat((currTrial+1).toString()).concat(" of ").concat(nTrials.toString()).concat(": Which tone did you hear?</div>");
+            },
+            on_finish: function (play_word){
+                userAns= play_word.button_pressed;
+            }
+        }
+        
+        // Feedback
+         var feedback ={
+            type: 'html-button-response',
+            choices: '',
+            stimulus: "",
+            on_start: function(feedback){
+                
+                if (tone[order[currTrial]]==(Number(userAns)+1)){
+                    //feedback.prompt = ("<div class='trialtext' style='color:green'><b>Correct, the answer was ").concat(toneLabel[tone[order[currTrial]]-1]).concat("</b></div>");
+                    
+                    feedback.prompt = ("<div class='trialtext' style='color:green'><b>Correct!</b> Click any symbol to continue.</div>");
+                    numCorrect++;
+                }
+                else{
+                    //feedback.prompt = ("<div class='trialtext' style='color:red'><b>Incorrect, the answer was ").concat(toneLabel[tone[order[currTrial]]-1]).concat("</b></div>");
+                    
+                    feedback.prompt = ("<div class='trialtext' style='color:red'><b>Incorrect!</b> Click any symbol to continue.</div>");
+                }
+                
+                // new
+                // button formatting to display red/green border in feedback
+                buttonArray[Number(userAns)] = 'class="feedbackwrong"/>';
+                buttonArray[tone[order[currTrial]]-1] = 'class="feedbackcorrect"/>';
+                
+                feedback.choices = ['MandarinStims/highlevel.png','MandarinStims/lowrising.png','MandarinStims/lowdipping.png', 'MandarinStims/highfalling.png'];
+                    
+                feedback.button_html = [('<img src="%choice%"' ).concat(buttonArray[0]),('<img src="%choice%"').concat(buttonArray[1]),('<img src="%choice%"').concat(buttonArray[2]),('<img src="%choice%"' ).concat(buttonArray[3])];
+                
+            },
+             on_finish: function(data){
+                 
+                 // reset buttonArray
+                 buttonArray = ['class="imgbutton"/>','class="imgbutton"/>','class="imgbutton"/>','class="imgbutton"/>'];
+                 
+                 // save data
+                 trialData = trialData.concat({
+                     trialNum: currTrial+1,
+                     stim: MandarinStims[order[currTrial]],
+                     tone: tone[order[currTrial]],
+                     response: Number(userAns) + 1,
+                     correct: tone[order[currTrial]]==(Number(userAns)+1)
+                });
+                 
+                 currTrial++;
+             }
+        }        
+        
+         // Combining the 3 parts of a trial
+        var trial = {
+            timeline: [play_word,get_response,feedback],
+            repetitions: nTrials,
+        };
+        timeline.push(trial);        
+        
+        // Final screen at the end
+        var end_screen = {
+            type: 'html-keyboard-response',
+            stimulus: '',
+            on_start: function(end_screen) {
+                end_screen.stimulus = ('<p>You have finished this task. Yay!</p><p>Percent correct = ').concat(((numCorrect/currTrial)*100).toFixed(2)).concat('%</p><p><a href="https://bigspeechexperiment.web.app/">Return to the main screen</a></p>');
+                
+                //Save data locally as csv. Source: https://github.com/mholt/PapaParse/issues/175
+                var blob = new Blob([ConvertToCSV(trialData)]);
+                if (window.navigator.msSaveOrOpenBlob)  // IE hack; see http://msdn.microsoft.com/en-us/library/ie/hh779016.aspx
+                    window.navigator.msSaveBlob(blob, "data_Mandarin.csv");
+                else
+                {
+                    var a = window.document.createElement("a");
+                    a.href = window.URL.createObjectURL(blob, {type: "text/plain"});
+                    a.download = "data_Mandarin.csv";
+                    document.body.appendChild(a);
+                    a.click();  // IE: "Access is denied"; see: https://connect.microsoft.com/IE/feedback/details/797361/ie-10-treats-blob-url-as-cross-origin-and-denies-access
+                    document.body.removeChild(a);
+                }
+                
+                
+                }
+            
+        }
+        timeline.push(end_screen);
+        
+        jsPsych.init({
+            preload_audio: [MandarinStims,exampleStims], // preload audio for faster execution
+            preload_images: ['MandarinStims/highlevel.png','MandarinStims/lowrising.png','MandarinStims/lowdipping.png', 'MandarinStims/highfalling.png'],
+            timeline: timeline
+        });
+  
+    </script>
+    </body>
+</html>
