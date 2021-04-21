@@ -6,6 +6,8 @@ Purpose: assess the relationship between musical scale-sensitivity and speech pr
 
 Data collected during Spring 2021.
 
+Experiment can be accessed at http://bigspeechexperiment.web.app/
+
 ## Tasks
 (in random order)
 1. Tone-scramble task: judge major vs. minor tone sequences
